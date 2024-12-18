@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+gradio = "~=3.46.1"
+langchain = "==0.0.308"
+text-generation = "~=0.6.1"
+python-dotenv = "*"
+
+[dev-packages]
+watchdog = {version = "~=3.0.0", extras=["watchmedo"]}
+
+[requires]
+python_version = "3.11"

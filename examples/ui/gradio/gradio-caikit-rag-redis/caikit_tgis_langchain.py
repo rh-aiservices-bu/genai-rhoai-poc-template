@@ -1,0 +1,1 @@
+../../../notebooks/langchain/caikit_tgis_langchain.py
