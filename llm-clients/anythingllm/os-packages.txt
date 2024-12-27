@@ -1,4 +1,0 @@
-patch
-wget
-xdg-utils
-liberation-fonts

@@ -1,4 +1,0 @@
-tesseract
-tesseract-devel
-tesseract-langpack-eng
-leptonica-devel

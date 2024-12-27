@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: bootstrap
+  namespace: openshift-gitops
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: in-cluster
+        name: rhoai-install
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: common-utils/rhoai
+    metadata:
+      name: "{{name}}"
+      namespace: openshift-gitops
+      labels:
+        component: bootstrap
+        purpose: "{{name}}"
+    spec:
+      project: default
+      source:
+        repoURL: "{{repoURL}}"
+        targetRevision: "{{targetRevision}}"
+        path: "{{path}}"
+      destination:
+        server: "https://kubernetes.default.svc"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - RespectIgnoreDifferences=true
+          - Retry=true
+        retry:
+          limit: 50
+          backoff:
+            duration: 15s
+            factor: 2
+            maxDuration: 5m # Maximum retry interval

@@ -1,0 +1,33 @@
+apiVersion: opendatahub.io/v1alpha
+kind: OdhDashboardConfig
+metadata:
+  name: odh-dashboard-config
+  namespace: redhat-ods-applications
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  modelServerSizes:
+    - name: Standard
+      resources:
+        limits:
+          cpu: '12'
+          memory: 24Gi
+        requests:
+          cpu: '8'
+          memory: 14Gi
+  notebookController:
+    enabled: true
+    notebookNamespace: rhods-notebooks
+    pvcSize: 50Gi
+  notebookSizes:
+    - name: Standard
+      resources:
+        limits:
+          cpu: '12'
+          memory: 24Gi
+        requests:
+          cpu: '8'
+          memory: 24Gi
+  templateOrder: []
+
+
