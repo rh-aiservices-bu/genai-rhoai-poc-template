@@ -11,7 +11,18 @@ spec:
         name: rhoai-install
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: main
-        path: common-utils/rhoai
+        path: common-utils/rhoai/install-operator
+      - cluster: in-cluster
+        name: rhoai-config
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: common-utils/rhoai/config
+      - cluster: in-cluster
+        name: rhoai-deploy
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: common-utils/rhoai/deploy
+  template:
     metadata:
       name: "{{name}}"
       namespace: openshift-gitops
