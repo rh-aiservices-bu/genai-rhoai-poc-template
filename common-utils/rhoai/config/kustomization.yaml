@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   # prehook
-  - config/validate-rhoai.yaml
+  - validate-rhoai.yaml
     # wave 0
-  - config/dashboardconfig.yaml
+  - dashboardconfig.yaml

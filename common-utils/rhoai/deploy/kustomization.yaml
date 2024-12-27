@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   # prehook
-  -   - validate-install.yaml
+  - validate-install.yaml
   # wave 0 deploy
   - dsci.yaml
   - accelerator-profile.yaml
