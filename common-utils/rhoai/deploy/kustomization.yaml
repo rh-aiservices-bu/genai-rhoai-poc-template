@@ -6,4 +6,5 @@ resources:
   - validate-install.yaml
   # wave 0 deploy
   - dsci.yaml
-  - accelerator-profile.yaml
+  #removed while testing on a non GPU cluster
+  #- accelerator-profile.yaml
