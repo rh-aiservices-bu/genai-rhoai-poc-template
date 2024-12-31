@@ -119,6 +119,8 @@ spec:
             name: ds-pipeline-user-access-dspa
           EOF
 
+          echo "Generating Workbenches"
+
           # Create the workbench PVC
           cat << EOF | oc apply -f-
           kind: PersistentVolumeClaim
@@ -312,5 +314,4 @@ spec:
 
           sleep 20
           
-          done
       restartPolicy: Never
