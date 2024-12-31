@@ -3,11 +3,6 @@ kind: Job
 metadata:
   name: create-and-apply-resources
   namespace: primer
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
-    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   backoffLimit: 8
   template:
