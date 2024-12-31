@@ -102,6 +102,22 @@ spec:
             kind: ClusterRole
             name: route-reader
             apiGroup: rbac.authorization.k8s.io
+          ---
+          kind: RoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: elyra-pipelines-$WORKBENCH_NAME
+            namespace: $USER_PROJECT
+            labels:
+              opendatahub.io/dashboard: 'true'
+          subjects:
+            - kind: ServiceAccount
+              name: $WORKBENCH_NAME
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: Role
+            name: ds-pipeline-user-access-dspa
+          EOF
 
           # Create the workbench PVC
           cat << EOF | oc apply -f-
