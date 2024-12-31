@@ -22,6 +22,16 @@ spec:
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: main
         path: common-utils/rhoai/deploy
+      - cluster: in-cluster
+        name: poc-primer
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: basic-vanilla-poc/bootstrap/primer
+      - cluster: in-cluster
+        name: anythingllm
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: basic-vanilla-poc/bootstrap/anythingllm
   template:
     metadata:
       name: "{{name}}"
