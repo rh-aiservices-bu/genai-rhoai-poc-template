@@ -11,7 +11,7 @@ metadata:
       https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/llm-clients/anythingllm
     opendatahub.io/recommended-accelerators: "[]"
     argocd.argoproj.io/sync-wave: "1"
-  name: workbench-anythingllm
+  name: anythingllm-workbench
   namespace: redhat-ods-applications
   labels:
     opendatahub.io/dashboard: "true"

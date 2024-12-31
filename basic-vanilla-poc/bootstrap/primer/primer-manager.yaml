@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: primer
+  labels:
+    app: primer
+    argocd.argoproj.io/managed-by: openshift-gitops
+  annotations:
+    openshift.io/display-name: "POC Primer"
+    argocd.argoproj.io/sync-wave: "0"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: project-creator
+  namespace: primer
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: project-creator-binding
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+subjects:
+- kind: ServiceAccount
+  name: project-creator
+  namespace: primer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: route-reader
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+rules:
+- apiGroups: ["route.openshift.io"]
+  resources: ["routes"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch"]
