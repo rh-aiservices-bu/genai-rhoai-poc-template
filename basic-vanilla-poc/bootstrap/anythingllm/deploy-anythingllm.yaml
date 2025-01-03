@@ -223,8 +223,6 @@ spec:
                     volumeMounts:
                       - mountPath: /opt/app-root/src
                         name: $WORKBENCH_NAME
-                      - mountPath: /dev/shm
-                        name: shm
                     image: >-
                       image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/$WORKBENCH_IMAGE
                     workingDir: /opt/app-root/src
