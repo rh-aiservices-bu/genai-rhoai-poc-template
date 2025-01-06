@@ -2,7 +2,7 @@
 This repository is a work-in-progress and is not recommended for use in a POC until complete.
 
 # Info
-Vanilla configurations for a RHOAI instance to deploy a GenAI POC. This will deploy a variety of different configurations including the a GenAI interface (AnythingLLM), a local MinIO s3 bucket, and other services needed for a GenAI POC on RHOAI.
+Vanilla configurations for a RHOAI instance to deploy a GenAI POC. This will deploy a variety of different required services including an LLM interface (AnythingLLM), a local MinIO s3 bucket, and other services needed for a GenAI POC on RHOAI.
 
 # Deploy POC Scaffolding
 
