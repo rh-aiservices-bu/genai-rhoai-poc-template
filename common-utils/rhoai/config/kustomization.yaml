@@ -6,3 +6,5 @@ resources:
   - validate-rhoai.yaml
     # wave 0
   - dashboardconfig.yaml
+    # wave 0
+  - AnythingLLM-connection-type-configmap.yaml   ## adds a new connection type for OpenAI-compatible model endpoints

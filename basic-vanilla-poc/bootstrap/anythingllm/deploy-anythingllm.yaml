@@ -119,6 +119,34 @@ spec:
             name: ds-pipeline-user-access-dspa
           EOF
 
+          # Create the secret for anythingLLM
+          cat << EOF | oc apply -f-
+
+          ---
+          kind: Secret
+          apiVersion: v1
+          metadata:
+            name: granite-endpoint
+            namespace: $USER_PROJECT
+            labels:
+              opendatahub.io/dashboard: 'true'
+            annotations:
+              opendatahub.io/connection-type-ref: anythingllm-generic-openai
+              openshift.io/description: Connect to a granite model
+              openshift.io/display-name: RHOAI-Hosted Granite
+          data:
+            DISABLE_TELEMETRY: dHJ1ZQ==
+            EMBEDDING_ENGINE: bmF0aXZl
+            GENERIC_OPEN_AI_API_KEY: ZHVtbXk==
+            GENERIC_OPEN_AI_BASE_PATH: ZHVtbXk=
+            GENERIC_OPEN_AI_MAX_TOKENS: MjA0OAo=
+            GENERIC_OPEN_AI_MODEL_PREF: ZHVtbXk=
+            LLM_PROVIDER: Z2VuZXJpYy1vcGVuYWk=
+            GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT: NDA5Ng==
+            VECTOR_DB: bGFuY2VkYg==
+          type: Opaque
+          EOF
+
           echo "Generating Workbenches"
 
           # Create the workbench PVC
@@ -307,9 +335,9 @@ spec:
                       defaultMode: 420
                       secretName: $WORKBENCH_NAME-tls
             readyReplicas: 1
-          
+
           EOF
 
           sleep 20
-          
+
       restartPolicy: Never
