@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
     # wave 0
   - primer-manager.yaml
+    # wave 1
+  - primer-images.yaml
