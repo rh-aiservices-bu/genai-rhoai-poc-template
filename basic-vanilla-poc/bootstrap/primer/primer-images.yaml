@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: image-puller-workbench-ilab
+  name: image-puller-workbench-anythingllm
   namespace: primer
   labels:
     k8s-app: image-puller
