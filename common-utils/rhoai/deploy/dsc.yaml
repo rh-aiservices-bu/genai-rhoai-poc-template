@@ -7,16 +7,12 @@ metadata:
 spec:
   components:
     codeflare:
-      devFlags: {}
-      managementState: Managed
+      managementState: Removed
     dashboard:
-      devFlags: {}
       managementState: Managed
     datasciencepipelines:
-      devFlags: {}
       managementState: Managed
     kserve:
-      devFlags: {}
       managementState: Managed
       serving:
         ingressGateway:
@@ -24,14 +20,15 @@ spec:
             type: OpenshiftDefaultIngress
         managementState: Managed
         name: knative-serving
+    kueue:
+      managementState: Removed
     modelmeshserving:
-      devFlags: {}
-      managementState: Managed
+      managementState: Removed
     ray:
-      devFlags: {}
-      managementState: Managed
+      managementState: Removed
+    trainingoperator:
+      managementState: Removed
     trustyai:
-      devFlags: {}
       managementState: Removed
     workbenches:
       managementState: Managed
