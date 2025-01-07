@@ -42,12 +42,13 @@ spec:
       containers:
         - name: enable-plugin
           image: 'image-registry.openshift-image-registry.svc:5000/openshift/tools:latest'
+          env:
+            - name: PLUGIN_NAME
+              value: odf-console
           command:
             - /bin/sh
             - -c
             - |
-              PLUGIN_NAME=odf-console
-            
               echo "Attempting to enable ${PLUGIN_NAME} plugin"
               echo ""
             
