@@ -10,27 +10,27 @@ spec:
       - cluster: in-cluster
         name: rhoai-install
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: main
+        targetRevision: dev
         path: common-utils/rhoai/install-operator
       - cluster: in-cluster
         name: rhoai-config
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: main
+        targetRevision: dev
         path: common-utils/rhoai/config
       - cluster: in-cluster
         name: rhoai-deploy
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: main
+        targetRevision: dev
         path: common-utils/rhoai/deploy
       - cluster: in-cluster
         name: poc-primer
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: main
+        targetRevision: dev
         path: basic-vanilla-poc/bootstrap/primer
       - cluster: in-cluster
         name: anythingllm
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: main
+        targetRevision: dev
         path: basic-vanilla-poc/bootstrap/anythingllm
   template:
     metadata:
