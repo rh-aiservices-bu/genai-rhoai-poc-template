@@ -32,6 +32,16 @@ spec:
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev
         path: basic-vanilla-poc/bootstrap/anythingllm
+      - cluster: in-cluster
+        name: mcgw-install
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: common-utils/mcgw/install-operator
+      - cluster: in-cluster
+        name: mcgw-deploy
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: common-utils/mcgw/deploy
   template:
     metadata:
       name: "{{name}}"
