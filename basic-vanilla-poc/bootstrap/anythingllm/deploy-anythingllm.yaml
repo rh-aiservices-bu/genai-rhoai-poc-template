@@ -121,13 +121,12 @@ spec:
 
           # Create the secret for anythingLLM
           cat << EOF | oc apply -f-
-
           ---
           kind: Secret
           apiVersion: v1
           metadata:
             name: granite-endpoint
-            namespace: $USER_PROJECT
+            namespace: demo
             labels:
               opendatahub.io/dashboard: 'true'
             annotations:
@@ -136,15 +135,16 @@ spec:
               openshift.io/display-name: RHOAI-Hosted Granite
           data:
             DISABLE_TELEMETRY: dHJ1ZQ==
-            EMBEDDING_ENGINE: bmF0aXZl
-            GENERIC_OPEN_AI_API_KEY: ZHVtbXk==
-            GENERIC_OPEN_AI_BASE_PATH: ZHVtbXk=
-            GENERIC_OPEN_AI_MAX_TOKENS: MjA0OAo=
-            GENERIC_OPEN_AI_MODEL_PREF: ZHVtbXk=
+            GENERIC_OPEN_AI_MODEL_PREF: Z3Jhbml0ZS0zLThiLWluc3RydWN0
             LLM_PROVIDER: Z2VuZXJpYy1vcGVuYWk=
+            GENERIC_OPEN_AI_BASE_PATH: aHR0cHM6Ly9ncmFuaXRlLTMtOGItaW5zdHJ1Y3QueW91cmNsdXN0ZXIuY29tOjQ0My92MQ==
+            EMBEDDING_ENGINE: bmF0aXZl
+            GENERIC_OPEN_AI_API_KEY: eW91ci10b2tlbi1oZXJl
             GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT: NDA5Ng==
             VECTOR_DB: bGFuY2VkYg==
+            GENERIC_OPEN_AI_MAX_TOKENS: MjA0OA==
           type: Opaque
+
           EOF
 
           echo "Generating Workbenches"
