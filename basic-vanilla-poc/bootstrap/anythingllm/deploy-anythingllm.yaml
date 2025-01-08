@@ -126,7 +126,7 @@ spec:
           apiVersion: v1
           metadata:
             name: granite-endpoint
-            namespace: demo
+            namespace: $USER_PROJECT
             labels:
               opendatahub.io/dashboard: 'true'
             annotations:
