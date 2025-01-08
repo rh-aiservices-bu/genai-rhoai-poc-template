@@ -4,8 +4,8 @@ metadata:
   annotations:
     opendatahub.io/notebook-image-creator: admin
     opendatahub.io/notebook-image-desc: >-
-      Jupyter notebook image with all the libraries needed for running Instruct Lab on OpenShift AI.
-    opendatahub.io/notebook-image-name: CUSTOM - InstructLab Workbench
+      VSCode image with all the libraries needed for running Instruct Lab on OpenShift AI.
+    opendatahub.io/notebook-image-name: "CUSTOM: InstructLab"
     opendatahub.io/notebook-image-order: "03"
     opendatahub.io/notebook-image-url: >-
       https://github.com/rh-aiservices-bu/parasol-insurance/tree/main/bootstrap/workbench-image

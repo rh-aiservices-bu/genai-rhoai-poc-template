@@ -4,8 +4,8 @@ metadata:
   annotations:
     opendatahub.io/notebook-image-creator: admin
     opendatahub.io/notebook-image-desc: >-
-       Notebook image with all the libraries needed for running AnythingLLM on OpenShift AI.
-    opendatahub.io/notebook-image-name: AnythingLLM
+      AnythingLLM on OpenShift AI.
+    opendatahub.io/notebook-image-name: "CUSTOM: AnythingLLM"
     opendatahub.io/notebook-image-order: "02"
     opendatahub.io/notebook-image-url: >-
       https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/llm-clients/anythingllm
