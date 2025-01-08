@@ -16,6 +16,7 @@ metadata:
   labels:
     opendatahub.io/dashboard: "true"
     opendatahub.io/notebook-image: "true"
+    app.kubernetes.io/created-by: byon
 spec:
   lookupPolicy:
     local: true
