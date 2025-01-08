@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-storage
+
+resources:
+  # prehook
+  - validate-install.yaml
+  # wave 0 deploy
+  - ocsinitialization.yaml
+  - enable-console-plugin.yaml
+  # wave 1 deploy
+  - storagecluster.yaml
+  - storagesystem.yaml
+
+patches:
+  - target:
+      group: batch
+      version: v1
+      kind: Job
+      name: validate-install
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env/1/value
+        value: odf-operator
