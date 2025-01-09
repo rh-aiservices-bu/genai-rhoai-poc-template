@@ -1,0 +1,11 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: demo
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  additionalConfig:
+    bucketclass: noobaa-default-bucket-class
+  generateBucketName: demo
+  storageClassName: openshift-storage.noobaa.io
