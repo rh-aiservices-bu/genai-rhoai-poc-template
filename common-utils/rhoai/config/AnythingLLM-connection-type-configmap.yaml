@@ -26,7 +26,7 @@ data:
       "envVar": "LLM_PROVIDER",
       "required": false,
       "properties": {
-        "defaultValue": "generic-"
+        "defaultValue": "generic-openai"
       }
     },
     {
@@ -34,7 +34,7 @@ data:
       "name": "Base URL",
       "envVar": "GENERIC_OPEN_AI_BASE_PATH",
       "properties": {
-        "defaultValue": "https://granite-3-8b-instruct-maas-apicast-production.apps.prod.rhoai.cluster.com:443/v1"
+        "defaultValue": "https://granite-3-8b-instruct.yourcluster.com:443/v1"
       }
     },
     {

@@ -121,7 +121,6 @@ spec:
 
           # Create the secret for anythingLLM
           cat << EOF | oc apply -f-
-
           ---
           kind: Secret
           apiVersion: v1
@@ -136,15 +135,16 @@ spec:
               openshift.io/display-name: RHOAI-Hosted Granite
           data:
             DISABLE_TELEMETRY: dHJ1ZQ==
-            EMBEDDING_ENGINE: bmF0aXZl
-            GENERIC_OPEN_AI_API_KEY: ZHVtbXk==
-            GENERIC_OPEN_AI_BASE_PATH: ZHVtbXk=
-            GENERIC_OPEN_AI_MAX_TOKENS: MjA0OAo=
-            GENERIC_OPEN_AI_MODEL_PREF: ZHVtbXk=
+            GENERIC_OPEN_AI_MODEL_PREF: Z3Jhbml0ZS0zLThiLWluc3RydWN0
             LLM_PROVIDER: Z2VuZXJpYy1vcGVuYWk=
+            GENERIC_OPEN_AI_BASE_PATH: aHR0cHM6Ly9ncmFuaXRlLTMtOGItaW5zdHJ1Y3QueW91cmNsdXN0ZXIuY29tOjQ0My92MQ==
+            EMBEDDING_ENGINE: bmF0aXZl
+            GENERIC_OPEN_AI_API_KEY: eW91ci10b2tlbi1oZXJl
             GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT: NDA5Ng==
             VECTOR_DB: bGFuY2VkYg==
+            GENERIC_OPEN_AI_MAX_TOKENS: MjA0OA==
           type: Opaque
+
           EOF
 
           echo "Generating Workbenches"
@@ -171,7 +171,7 @@ spec:
             resources:
               requests:
                 storage: 5Gi
-            storageClassName: ocs-storagecluster-ceph-rbd
+            # storageClassName: ocs-storagecluster-ceph-rbd
             volumeMode: Filesystem
           EOF
 
@@ -186,7 +186,7 @@ spec:
               notebooks.opendatahub.io/oauth-logout-url: >-
                 $DASHBOARD_ROUTE/projects/$USER_PROJECT?notebookLogout=$WORKBENCH_NAME
               opendatahub.io/accelerator-name: ''
-              openshift.io/description: 'A notebook to interact with an LLM deployed within Red Hat OpenShift AI'
+              openshift.io/description: 'A Custom Workbench to interact with an LLM'
               openshift.io/display-name: My Workbench
               notebooks.opendatahub.io/last-image-selection: '$WORKBENCH_IMAGE'
               notebooks.opendatahub.io/last-size-selection: Standard
