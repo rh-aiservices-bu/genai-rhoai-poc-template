@@ -37,24 +37,6 @@ spec:
 
           echo "Generating and apply resources for $USER_NAME..."
 
-          # Create projects
-          cat << EOF | oc apply -f-
-          apiVersion: project.openshift.io/v1
-          kind: Project
-          metadata:
-            annotations:
-              openshift.io/description: ''
-              openshift.io/display-name: $USER_PROJECT
-            labels:
-              kubernetes.io/metadata.name: $USER_PROJECT
-              # modelmesh-enabled: 'true'
-              opendatahub.io/dashboard: 'true'
-            name: $USER_PROJECT
-          spec:
-            finalizers:
-            - kubernetes
-          EOF
-
           # Apply role bindings
           cat << EOF | oc apply -f-
           apiVersion: rbac.authorization.k8s.io/v1
