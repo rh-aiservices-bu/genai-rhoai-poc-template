@@ -186,7 +186,7 @@ spec:
               notebooks.opendatahub.io/oauth-logout-url: >-
                 $DASHBOARD_ROUTE/projects/$USER_PROJECT?notebookLogout=$WORKBENCH_NAME
               opendatahub.io/accelerator-name: ''
-              openshift.io/description: 'A notebook to interact with an LLM deployed within Red Hat OpenShift AI'
+              openshift.io/description: 'A Custom Workbench to interact with an LLM'
               openshift.io/display-name: My Workbench
               notebooks.opendatahub.io/last-image-selection: '$WORKBENCH_IMAGE'
               notebooks.opendatahub.io/last-size-selection: Standard
