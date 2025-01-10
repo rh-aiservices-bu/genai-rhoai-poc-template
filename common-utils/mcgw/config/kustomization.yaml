@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: demo
+
+resources:
+  # prehook
+  - validate-noobaa.yaml
+  # wave 0 deploy
+  - objectbucketclaim.yaml
+  # wave 1 deploy
+  - create-data-connection.yaml

@@ -23,15 +23,10 @@ spec:
         targetRevision: dev
         path: common-utils/rhoai/deploy
       - cluster: in-cluster
-        name: poc-primer
+        name: demo-project
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev
-        path: basic-vanilla-poc/bootstrap/primer
-      - cluster: in-cluster
-        name: anythingllm
-        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: dev
-        path: basic-vanilla-poc/bootstrap/anythingllm
+        path: common-utils/demo-project
       - cluster: in-cluster
         name: mcgw-install
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
@@ -42,6 +37,21 @@ spec:
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev
         path: common-utils/mcgw/deploy
+      - cluster: in-cluster
+        name: mcgw-config
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: common-utils/mcgw/config
+      - cluster: in-cluster
+        name: poc-primer
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: basic-vanilla-poc/bootstrap/primer
+      - cluster: in-cluster
+        name: anythingllm
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: basic-vanilla-poc/bootstrap/anythingllm
   template:
     metadata:
       name: "{{name}}"

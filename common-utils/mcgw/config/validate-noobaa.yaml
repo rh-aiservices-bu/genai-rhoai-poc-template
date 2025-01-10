@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: validate-noobaa
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: validate-noobaa
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+rules:
+- apiGroups: ["noobaa.io"]
+  resources: ["noobaas"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: validate-noobaa
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+subjects:
+- kind: ServiceAccount
+  name: validate-noobaa
+  namespace: demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: validate-noobaa
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: validate-noobaa
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: phase-check
+          image: 'image-registry.openshift-image-registry.svc:5000/openshift/tools:latest'
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+              echo "Checking Noobaa status.phase..."
+              NOOBAA_PHASE=$(oc get -n openshift-storage noobaa noobaa -o jsonpath='{.status.phase}')
+              if [ "$NOOBAA_PHASE" = "Ready" ]; then
+                echo "Noobaa is in Ready phase."
+                exit 0
+              else
+                echo "Noobaa is in $NOOBAA_PHASE phase."
+              fi
+              sleep 5
+              done
+      serviceAccountName: validate-noobaa

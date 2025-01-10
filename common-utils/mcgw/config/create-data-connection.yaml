@@ -1,0 +1,96 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: create-data-connection
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: create-data-connection
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+rules:
+- apiGroups: ["objectbucket.io"]
+  resources: ["objectbucketclaims"]
+  verbs: ["get", "list"]
+- apiGroups: ["objectbucket.io"]
+  resources: ["objectbuckets"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: create-data-connection
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+subjects:
+- kind: ServiceAccount
+  name: create-data-connection
+  namespace: demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: create-data-connection
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-data-connection
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: create-data-connection
+          image: 'image-registry.openshift-image-registry.svc:5000/openshift/tools:latest'
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+              echo "Checking OBC status.phase..."
+              OBC_PHASE=$(oc get obc demo -o jsonpath='{.status.phase}')
+              if [ "$OBC_PHASE" = "Bound" ]; then
+                echo "OBC is in Bound phase."
+                break
+              else
+                echo "OBC is in $OBC_PHASE phase."
+              fi
+              sleep 5
+              done
+              OB_NAME=$(oc get obc demo -o jsonpath='{.spec.objectBucketName}')
+              BUCKET_ENDPOINT=$(oc get ob $OB_NAME -o jsonpath='{.spec.endpoint.bucketHost}')
+              BUCKET_NAME=$(oc get ob $OB_NAME -o jsonpath='{.spec.endpoint.bucketName}')
+              BUCKET_ACCESS_KEY=$(oc get secret demo -ojsonpath='{.data.AWS_ACCESS_KEY_ID}' | base64 -d)
+              BUCKET_SECRET_KEY=$(oc get secret demo -ojsonpath='{.data.AWS_SECRET_ACCESS_KEY}' | base64 -d)
+              echo "Creating Data Connection secret for $OB_NAME"
+              cat << EOF | oc apply -f-
+              ---
+              kind: Secret
+              apiVersion: v1
+              metadata:
+                name: demo-models
+                labels:
+                  opendatahub.io/dashboard: 'true'
+                annotations:
+                  opendatahub.io/connection-type: s3
+                  opendatahub.io/connection-type-ref: s3
+                  openshift.io/display-name: Demo Models
+                  openshift.io/description: Demo Model Bucket
+              stringData:
+                AWS_DEFAULT_REGION: local
+                AWS_S3_ENDPOINT: https://${BUCKET_ENDPOINT}
+                AWS_S3_BUCKET: "${BUCKET_NAME}"
+                AWS_ACCESS_KEY_ID: "${BUCKET_ACCESS_KEY}"
+                AWS_SECRET_ACCESS_KEY: "${BUCKET_SECRET_KEY}"
+              type: Opaque
+              EOF
+      serviceAccountName: create-data-connection

@@ -1,0 +1,10 @@
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  annotations:
+    openshift.io/description: 'Project to house the model serving and RAG demonstration components'
+    openshift.io/display-name: Demo Project
+  labels:
+    opendatahub.io/dashboard: 'true'
+  name: demo
+spec: {}
