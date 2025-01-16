@@ -87,7 +87,7 @@ spec:
                   openshift.io/description: Demo Model Bucket
               stringData:
                 AWS_DEFAULT_REGION: local
-                AWS_S3_ENDPOINT: https://${BUCKET_ENDPOINT}
+                AWS_S3_ENDPOINT: http://${BUCKET_ENDPOINT}
                 AWS_S3_BUCKET: "${BUCKET_NAME}"
                 AWS_ACCESS_KEY_ID: "${BUCKET_ACCESS_KEY}"
                 AWS_SECRET_ACCESS_KEY: "${BUCKET_SECRET_KEY}"
