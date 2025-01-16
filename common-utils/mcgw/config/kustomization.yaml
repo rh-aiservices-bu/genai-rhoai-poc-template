@@ -8,5 +8,5 @@ resources:
   - validate-noobaa.yaml
   # wave 0 deploy
   - objectbucketclaim.yaml
-  # wave 1 deploy
+  # posthook
   - create-data-connection.yaml
