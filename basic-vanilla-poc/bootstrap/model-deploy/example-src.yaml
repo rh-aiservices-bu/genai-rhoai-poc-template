@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: model-source
+  namespace: demo
 stringData:
   S3_SYNC_TRANSFER_CONFIG__MAX_FILES: "5"
   S3_SYNC_SRC__ENDPOINT: https://s3.amazonaws.com
