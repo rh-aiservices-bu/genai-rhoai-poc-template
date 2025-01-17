@@ -139,7 +139,7 @@ spec:
             DISABLE_TELEMETRY: "true"
             GENERIC_OPEN_AI_MODEL_PREF: aligned-granite
             LLM_PROVIDER: generic-openai
-              GENERIC_OPEN_AI_BASE_PATH: "https://${route}/v1"
+            GENERIC_OPEN_AI_BASE_PATH: "https://${route}/v1"
             EMBEDDING_ENGINE: native
             GENERIC_OPEN_AI_API_KEY: "${api_key}"
             GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT: "4096"
