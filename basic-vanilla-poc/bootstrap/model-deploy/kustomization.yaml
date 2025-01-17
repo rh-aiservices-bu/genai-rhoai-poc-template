@@ -6,3 +6,7 @@ namespace: demo
 resources:
   # presync
   - synchronize-model.yaml
+  # wave 0 deploy
+  - deploy-model.yaml
+  # wave 1 configure
+  - access-token.yaml
