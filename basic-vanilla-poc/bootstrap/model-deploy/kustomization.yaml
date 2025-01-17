@@ -6,3 +6,5 @@ namespace: demo
 resources:
   # presync
   - synchronize-model.yaml
+  # wave 0 deploy
+  - deploy-model.yaml
