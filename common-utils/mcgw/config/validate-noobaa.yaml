@@ -35,7 +35,7 @@ roleRef:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: validate-noobaa
+  generateName: validate-noobaa-
   annotations:
     argocd.argoproj.io/hook: PreSync
 spec:

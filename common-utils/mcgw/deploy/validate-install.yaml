@@ -34,7 +34,7 @@ roleRef:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: validate-install
+  generateName: validate-install-
   annotations:
     argocd.argoproj.io/hook: PreSync
 spec:

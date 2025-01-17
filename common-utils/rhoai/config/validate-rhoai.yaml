@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: check-rhoai-status
+  generateName: check-rhoai-status-
   namespace: redhat-ods-operator
   annotations:
     argocd.argoproj.io/hook: PreSync
