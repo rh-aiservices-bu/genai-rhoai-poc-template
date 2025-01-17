@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: synchronize-model
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      containers:
+        - name: s3-sync
+          image: quay.io/jharmison/s3-sync:0.3.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - -vvvvv
+            - --no-dest-validate
+          envFrom:
+            - secretRef:
+                name: demo-models
+            - secretRef:
+                name: model-source
+      restartPolicy: Never

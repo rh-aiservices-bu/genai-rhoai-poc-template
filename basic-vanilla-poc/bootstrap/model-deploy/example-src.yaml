@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: model-source
+stringData:
+  S3_SYNC_TRANSFER_CONFIG__MAX_FILES: "5"
+  S3_SYNC_SRC__ENDPOINT: https://s3.amazonaws.com
+  S3_SYNC_SRC__PATH: s3://bucket/folder/
+  S3_SYNC_SRC__ACCESS_KEY: <access key id>
+  S3_SYNC_SRC__SECRET_KEY: <secret access key>
+  S3_SYNC_SRC__REGION: us-east-1
+  S3_SYNC_SRC__VALIDATE_TLS: "true"
