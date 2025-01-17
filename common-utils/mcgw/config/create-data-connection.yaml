@@ -13,15 +13,15 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 rules:
-- apiGroups: ["objectbucket.io"]
-  resources: ["objectbucketclaims"]
-  verbs: ["get", "list"]
-- apiGroups: ["objectbucket.io"]
-  resources: ["objectbuckets"]
-  verbs: ["get", "list"]
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "list", "create", "update", "patch"]
+  - apiGroups: ["objectbucket.io"]
+    resources: ["objectbucketclaims"]
+    verbs: ["get", "list"]
+  - apiGroups: ["objectbucket.io"]
+    resources: ["objectbuckets"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "create", "update", "patch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -30,9 +30,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 subjects:
-- kind: ServiceAccount
-  name: create-data-connection
-  namespace: demo
+  - kind: ServiceAccount
+    name: create-data-connection
+    namespace: demo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -51,7 +51,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: create-data-connection
-          image: 'image-registry.openshift-image-registry.svc:5000/openshift/tools:latest'
+          image: "image-registry.openshift-image-registry.svc:5000/openshift/tools:latest"
           command:
             - /bin/sh
             - -c
@@ -75,8 +75,8 @@ spec:
               echo "Creating Data Connection secret for $OB_NAME"
               cat << EOF | oc apply -f-
               ---
-              kind: Secret
               apiVersion: v1
+              kind: Secret
               metadata:
                 name: demo-models
                 labels:
@@ -94,5 +94,25 @@ spec:
                 AWS_S3_ENDPOINT: http://${BUCKET_ENDPOINT}
                 AWS_SECRET_ACCESS_KEY: "${BUCKET_SECRET_KEY}"
               type: Opaque
+              EOF
+              cat << EOF | oc apply -f-
+              ---
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: storage-config
+                labels:
+                  opendatahub.io/managed: "true"
+              stringData:
+                demo-models: >-
+                  {
+                    "access_key_id": "${BUCKET_ACCESS_KEY}",
+                    "bucket": "${AWS_S3_BUCKET}",
+                    "default_bucket": "${AWS_S3_BUCKET}",
+                    "endpoint_url": "http://${BUCKET_ENDPOINT}",
+                    "region": "local",
+                    "secret_access_key": "${BUCKET_SECRET_KEY}",
+                    "type": "s3"
+                  }
               EOF
       serviceAccountName: create-data-connection
