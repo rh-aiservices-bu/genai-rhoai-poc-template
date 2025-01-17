@@ -68,12 +68,12 @@ spec:
       name: ""
       resources:
         limits:
-          cpu: "12"
-          memory: 24Gi
+          cpu: "4"
+          memory: 12Gi
           nvidia.com/gpu: "1"
         requests:
-          cpu: "8"
-          memory: 14Gi
+          cpu: "2"
+          memory: 8Gi
           nvidia.com/gpu: "1"
       runtime: aligned-granite
       storage:
