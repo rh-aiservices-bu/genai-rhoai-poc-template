@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: synchronize-model-
+  name: synchronize-model
   annotations:
     argocd.argoproj.io/hook: PreSync
 spec:

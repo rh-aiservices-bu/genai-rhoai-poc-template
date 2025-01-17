@@ -41,7 +41,7 @@ roleRef:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: create-data-connection-
+  name: create-data-connection
   annotations:
     argocd.argoproj.io/hook: PostSync
 spec:
