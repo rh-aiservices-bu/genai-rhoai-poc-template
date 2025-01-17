@@ -1,4 +1,57 @@
 ---
+apiVersion: authorino.kuadrant.io/v1beta3
+kind: AuthConfig
+metadata:
+  labels:
+    security.opendatahub.io/authorization-group: default
+  name: aligned-granite
+spec:
+  authentication:
+    kubernetes-user:
+      kubernetesTokenReview:
+        audiences:
+          - https://kubernetes.default.svc
+      metrics: false
+      priority: 0
+  authorization:
+    kubernetes-rbac:
+      kubernetesSubjectAccessReview:
+        resourceAttributes:
+          group:
+            value: serving.kserve.io
+          name:
+            value: aligned-granite
+          namespace:
+            value: demo
+          resource:
+            value: inferenceservices
+          subresource:
+            value: ""
+          verb:
+            value: get
+        user:
+          selector: auth.identity.user.username
+      metrics: false
+      priority: 0
+  hosts:
+    - aligned-granite-predictor.demo
+    - aligned-granite-predictor.demo.svc
+    - aligned-granite-predictor.demo.svc.cluster.local
+    - aligned-granite.demo
+    - aligned-granite.demo.svc
+    - aligned-granite.demo.svc.cluster.local
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aligned-granite-sa-aligned-granite-sa
+  labels:
+    opendatahub.io/dashboard: "true"
+  annotations:
+    kubernetes.io/service-account.name: aligned-granite-sa
+    openshift.io/display-name: aligned-granite-sa
+type: kubernetes.io/service-account-token
+---
 apiVersion: serving.kserve.io/v1alpha1
 kind: ServingRuntime
 metadata:
@@ -51,11 +104,11 @@ kind: InferenceService
 metadata:
   annotations:
     openshift.io/display-name: Aligned Granite
+    security.opendatahub.io/enable-auth: "true"
     serving.knative.openshift.io/enablePassthrough: "true"
     sidecar.istio.io/inject: "true"
     sidecar.istio.io/rewriteAppHTTPProbers: "true"
   labels:
-    networking.knative.dev/visibility: cluster-local
     opendatahub.io/dashboard: "true"
   name: aligned-granite
 spec:
