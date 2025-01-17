@@ -41,17 +41,6 @@ spec:
     - aligned-granite.demo.svc
     - aligned-granite.demo.svc.cluster.local
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: aligned-granite-sa-aligned-granite-sa
-  labels:
-    opendatahub.io/dashboard: "true"
-  annotations:
-    kubernetes.io/service-account.name: aligned-granite-sa
-    openshift.io/display-name: aligned-granite-sa
-type: kubernetes.io/service-account-token
----
 apiVersion: serving.kserve.io/v1alpha1
 kind: ServingRuntime
 metadata:
