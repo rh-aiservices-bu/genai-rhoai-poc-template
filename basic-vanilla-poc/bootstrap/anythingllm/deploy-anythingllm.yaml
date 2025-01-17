@@ -103,7 +103,7 @@ spec:
 
           echo -n 'Waiting for KServe Access Token'
           while true; do
-              api_key="$(oc get secret access-model-sa -ogo-template='{{ .data.token | base64decode }}' 2>/dev/null ||:)"
+              api_key="$(oc get secret access-model-sa -n $USER_PROJECT -ogo-template='{{ .data.token | base64decode }}' 2>/dev/null ||:)"
               echo -n .
               if [ -n "$api_key" ]; then
                   break
