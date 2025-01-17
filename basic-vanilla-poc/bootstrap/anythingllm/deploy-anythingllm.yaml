@@ -20,7 +20,7 @@ spec:
           # This needs to be a job so we can pull the dashboard route and apply it
 
           echo -n 'Waiting for rhods-dashboard route'
-          while [ -z "\$(oc get route -n redhat-ods-applications rhods-dashboard -oname 2>/dev/null)" ]; do
+          while [ -z "$(oc get route -n redhat-ods-applications rhods-dashboard -oname 2>/dev/null ||:)" ]; do
             echo -n .
             sleep 5
           done; echo
@@ -101,22 +101,25 @@ spec:
             name: ds-pipeline-user-access-dspa
           EOF
 
-          # Recover the KServe access token, when it's ready
+          echo -n 'Waiting for KServe Access Token'
           while true; do
-              api_key="$(oc get secret access-model-sa -ogo-template='{{ .data.token | base64decode }}' ||:)"
+              api_key="$(oc get secret access-model-sa -ogo-template='{{ .data.token | base64decode }}' 2>/dev/null ||:)"
+              echo -n .
               if [ -n "$api_key" ]; then
                   break
               fi
               sleep 5
-          done
-          # Recover the public route, when it's ready
+          done; echo
+
+          echo -n 'Waiting for public model route'
           while true; do
-              route="$(oc get route -n istio-system aligned-granite-${USER_PROJECT} -ojsonpath='{.status.ingress[0].host}' ||:)"
+              route="$(oc get route -n istio-system aligned-granite-${USER_PROJECT} -ojsonpath='{.status.ingress[0].host}' 2>/dev/null ||:)"
+              echo -n .
               if [ -n "$route" ]; then
                   break
               fi
               sleep 5
-          done
+          done; echo
 
           # Create the secret for anythingLLM
           cat << EOF | oc apply -f-
