@@ -79,6 +79,7 @@ ls aligned-model
 
 `Building/updating image.`\
 `Connecting to cluster: https://api.cluster.example.com:6443`\
+`Recovering Data Connection information (when available from the cluster).`\
 `+ /usr/local/bin/s3cmd -c /tmp/s3cfg put --recursive aligned-model/ s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/`\
 `upload: 'aligned-model/config.json' -> 's3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/config.json'  [1 of 2]`\
 ` 518 of 518   100% in    0s  1306.29 B/s  done`\
