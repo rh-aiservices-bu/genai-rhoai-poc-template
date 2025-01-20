@@ -17,10 +17,19 @@ echo -n "Connecting to cluster: "
 oc whoami --show-server
 
 # Recover the bucket secret
-eval "$(
-    { oc get secret -n demo demo-models -ojson 2>/dev/null || :; } |
-        { jq -r '.data | to_entries | map_values(@sh "export \(.key)=\(.value | @base64d)")[]' || :; }
-)"
+echo -n "Recovering Data Connection information (when available from the cluster)"
+while true; do
+    eval "$(
+        { oc get secret -n demo demo-models -ojson 2>/dev/null || :; } |
+            { jq -r '.data | to_entries | map_values(@sh "export \(.key)=\(.value | @base64d)")[]' || :; }
+    )"
+    if [ -n "$AWS_S3_BUCKET" ]; then
+        echo .
+        break
+    fi
+    echo -n .
+    sleep 1
+done
 
 # Modify our endpoint to use the external route
 if [ "${AWS_S3_ENDPOINT}" = "http://s3.openshift-storage.svc" ]; then
