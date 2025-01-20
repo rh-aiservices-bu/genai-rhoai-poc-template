@@ -57,26 +57,32 @@ For example, suppose you have the following directory structure:
 
 You would want to run:
 
-    ```
-    cd ~/Downloads
-    ls aligned-model
-    ```
+```
+cd ~/Downloads
+ls
+```
 
-    `config.json  example.safetensors`
+`aligned-model`
 
-    ```
-    ~/genai-rhoai-poc-template/hack/upload.sh aligned-model/
-    ```
+```
+ls aligned-model
+```
 
-    `Building/updating image.`
-    `Connecting to cluster: https://api.cluster.example.com:6443`
-    `+ /usr/local/bin/s3cmd -c /tmp/s3cfg put --recursive aligned-model/ s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/`
-    `upload: 'aligned-model/config.json' -> 's3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/config.json'  [1 of 2]`
-    ` 518 of 518   100% in    0s  1306.29 B/s  done`
-    `upload: 'aligned-model/example.safetensors' -> 's3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/example.safetensors'  [2 of 2]`
-    ` 1588 of 1588   100% in    0s     9.51 KB/s  done`
-    `+ /usr/local/bin/s3cmd -c /tmp/s3cfg ls s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/`
-    `2025-01-20 16:19          518  s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/config.json`
-    `2025-01-20 16:19         1588  s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/example.safetensors`
+`config.json  example.safetensors`
+
+```
+~/genai-rhoai-poc-template/hack/upload.sh aligned-model/
+```
+
+`Building/updating image.`
+`Connecting to cluster: https://api.cluster.example.com:6443`
+`+ /usr/local/bin/s3cmd -c /tmp/s3cfg put --recursive aligned-model/ s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/`
+`upload: 'aligned-model/config.json' -> 's3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/config.json'  [1 of 2]`
+` 518 of 518   100% in    0s  1306.29 B/s  done`
+`upload: 'aligned-model/example.safetensors' -> 's3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/example.safetensors'  [2 of 2]`
+` 1588 of 1588   100% in    0s     9.51 KB/s  done`
+`+ /usr/local/bin/s3cmd -c /tmp/s3cfg ls s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/`
+`2025-01-20 16:19          518  s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/config.json`
+`2025-01-20 16:19         1588  s3://demo-64d3c912-dd41-4ec5-bf3a-cff4895655b0/models/example.safetensors`
 
 At the end of this process, apply [the manifest](basic-vanilla-poc/bootstrap/model-deploy/example-src-local.yaml) to indicate that the local upload is complete as described above.
