@@ -1,0 +1,21 @@
+FROM registry.access.redhat.com/ubi9/ubi:latest
+
+ENV HOME=/s3cmd
+
+RUN mkdir -p /s3cmd && \
+    dnf -y install python3-pip jq && \
+    dnf -y clean all && \
+    python3 -m pip install --no-cache-dir s3cmd
+
+RUN curl -sLo- "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz" | tar xvz -C /usr/local/bin && \
+    chmod +x /usr/local/bin/{kubectl,oc}
+
+COPY overlay/ /
+
+WORKDIR /workspace
+
+VOLUME /workspace
+VOLUME /s3cmd/.kube
+
+ENTRYPOINT ["/usr/local/bin/s3-upload.sh"]
+CMD []
