@@ -41,6 +41,9 @@ To use the uploader:
 1. Open a terminal to the location of your desired upload files. They don't need to be adjacent to the uploader, but you need to know the path to the repository you downloaded. You should be able to run `ls` and see the files, or a directory containing the files.
 1. Run `upload.sh` from this repository and provide one or more relative paths to the files you want uploaded. For directories that you'd like to be fed directly to the model parent key in the bucket, include a trailing slash.
 
+> [!WARNING]
+> You must be in the correct directory, and only use a relative path that is a child of that directory, when using the uploader. It will use both of these pieces of information to ensure that the model files are available to upload from inside a container.
+
 For example, suppose you have the following directory structure:
 
 ```
