@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: model-source
+  namespace: demo
+stringData:
+  S3_SYNC_LOCAL_UPLOAD_COMPLETE: "true"

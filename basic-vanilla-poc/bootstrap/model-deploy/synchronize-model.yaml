@@ -12,9 +12,16 @@ spec:
         - name: s3-sync
           image: quay.io/jharmison/s3-sync:0.3.1
           imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
           args:
-            - -vvvvv
-            - --no-dest-validate
+            - -c
+            - |
+              if "${S3_SYNC_LOCAL_UPLOAD_COMPLETE:-false}" >/dev/null 2>&1; then
+                echo "Skipping sync as upload marked complete"
+                exit 0
+              fi
+              s3-sync -vvvvv --no-dest-validate
           envFrom:
             - secretRef:
                 name: demo-models
