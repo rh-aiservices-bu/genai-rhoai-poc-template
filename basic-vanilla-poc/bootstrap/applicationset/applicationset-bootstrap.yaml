@@ -4,6 +4,7 @@ metadata:
   name: bootstrap
   namespace: openshift-gitops
 spec:
+  goTemplate: true
   generators:
   - list:
       elements:
@@ -47,6 +48,7 @@ spec:
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev
         path: basic-vanilla-poc/bootstrap/model-deploy
+        prune: "false"
       - cluster: in-cluster
         name: poc-primer
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
@@ -59,23 +61,19 @@ spec:
         path: basic-vanilla-poc/bootstrap/anythingllm
   template:
     metadata:
-      name: "{{name}}"
+      name: "{{ .name }}"
       namespace: openshift-gitops
       labels:
         component: bootstrap
-        purpose: "{{name}}"
     spec:
       project: default
       source:
-        repoURL: "{{repoURL}}"
-        targetRevision: "{{targetRevision}}"
-        path: "{{path}}"
+        repoURL: "{{ .repoURL }}"
+        targetRevision: "{{ .targetRevision }}"
+        path: "{{ .path }}"
       destination:
-        server: "https://kubernetes.default.svc"
+        name: "{{ .cluster }}"
       syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
         syncOptions:
           - RespectIgnoreDifferences=true
           - Retry=true
@@ -84,4 +82,10 @@ spec:
           backoff:
             duration: 15s
             factor: 2
-            maxDuration: 5m # Maximum retry interval
+            maxDuration: 5m
+  templatePatch: |
+    spec:
+      syncPolicy:
+        automated:
+          prune: {{ .prune | default "true" }}
+          selfHeal: {{ .selfHeal | default "true" }}
