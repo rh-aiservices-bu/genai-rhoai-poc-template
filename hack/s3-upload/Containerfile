@@ -7,8 +7,10 @@ RUN mkdir -p /s3cmd && \
     dnf -y clean all && \
     python3 -m pip install --no-cache-dir s3cmd
 
-RUN arch=$(uname -m); if [ "$arch" = "x86_64" ]; then dlarch=amd64; elif [ "$arch" = "aarch64" ]; then dlarch=arm64; else echo "Unrecognized arch: $arch" >&2; exit 1; fi; \
-    curl -sLo- "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-$dlarch.tar.gz" | tar xvz -C /usr/local/bin && \
+RUN arch=$(uname -m); if [ "$arch" = "x86_64" ]; then dlarch=amd64-rhel9; elif [ "$arch" = "aarch64" ]; then dlarch=arm64; else echo "Unrecognized arch: $arch" >&2; exit 1; fi; \
+    url="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-$dlarch.tar.gz" && \
+    echo "Downloading: $url" && \
+    curl -sLo- "$url" | tar xvz -C /usr/local/bin && \
     chmod +x /usr/local/bin/{kubectl,oc}
 
 COPY overlay/ /
