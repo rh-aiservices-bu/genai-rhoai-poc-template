@@ -44,6 +44,11 @@ spec:
         targetRevision: dev
         path: common-utils/mcgw/config
       - cluster: in-cluster
+        name: model-sync
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: basic-vanilla-poc/bootstrap/model-sync
+      - cluster: in-cluster
         name: model-deploy
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev

@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trigger-rebuild
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trigger-rebuild-namespace-edit
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+- kind: ServiceAccount
+  name: trigger-rebuild
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: s3-sync
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  lookupPolicy:
+    local: true
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: s3-sync
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+      ref: dev
+    contextDir: basic-vanilla-poc/bootstrap/model-sync/s3-sync
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Containerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: s3-sync:latest
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trigger-s3-sync-rebuild
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      serviceAccount: trigger-rebuild
+      serviceAccountName: trigger-rebuild
+      restartPolicy: Never
+      containers:
+      - name: trigger-rebuild
+        image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+        - -xc
+        - |-
+          oc start-build --wait=true s3-sync

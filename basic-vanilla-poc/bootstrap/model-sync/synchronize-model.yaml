@@ -1,0 +1,24 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: synchronize-model
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      containers:
+        - name: s3-sync
+          image: image-registry.openshift-image-registry.svc:5000/demo/s3-sync:latest
+          imagePullPolicy: IfNotPresent
+          args:
+          - -vvvvv
+          - --no-dest-validate
+          envFrom:
+            - secretRef:
+                name: demo-models
+            - secretRef:
+                name: model-source
+      restartPolicy: Never

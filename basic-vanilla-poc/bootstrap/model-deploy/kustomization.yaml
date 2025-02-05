@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: demo
 
 resources:
-  # presync
-  - synchronize-model.yaml
+  # presync wait for model
+  - wait-for-model.yaml
   # wave 0 deploy
   - deploy-model.yaml
   # wave 1 configure
