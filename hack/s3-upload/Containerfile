@@ -7,8 +7,6 @@ RUN mkdir -p /s3cmd && \
     dnf -y clean all && \
     python3 -m pip install --no-cache-dir s3cmd
 
-ARG IBMCLOUD_VERSION=2.32.0
-
 RUN set -o pipefail && \
     arch=$(uname -m) && \
     if [ "$arch" = "x86_64" ]; then \
