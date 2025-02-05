@@ -4,7 +4,8 @@ kind: Kustomization
 namespace: demo
 
 resources:
-  # presync
+  # wave 0 image build definition
   - image-build.yaml
-  # wave 0 sync
+  - rbac.yaml
+  # postsync model syncrhonize
   - synchronize-model.yaml
