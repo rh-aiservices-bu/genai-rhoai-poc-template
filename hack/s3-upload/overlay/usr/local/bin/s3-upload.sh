@@ -17,10 +17,10 @@ function show_usage {
 while (("${#}" > 0)); do
     case "$1" in
     *)
-        if [ -e "$1" ]; then
+        if [ -d "$1" ]; then
             paths_to_upload+=("$1")
         else
-            echo "Unrecognized path provided: $1" >&2
+            echo "Non-directory path provided: $1" >&2
             show_usage
             exit 1
         fi
@@ -90,7 +90,7 @@ dest="s3://${AWS_S3_BUCKET}/models/"
 
 # Upload directories recursively, using
 for input in "${paths_to_upload[@]}"; do
-    s3cmd put --recursive "$input" "$dest"
+    s3cmd sync --no-delete-removed "$input" "$dest"
 done
 
 s3cmd ls "$dest"
