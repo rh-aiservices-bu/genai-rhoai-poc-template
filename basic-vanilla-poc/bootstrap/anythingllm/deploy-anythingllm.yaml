@@ -113,7 +113,7 @@ spec:
 
           echo -n 'Waiting for public model route'
           while true; do
-              route="$(oc get route -n istio-system -l serving.knative.dev/route=aligned-granite-predictor -ojsonpath='{items[0].status.ingress[0].host}' 2>/dev/null ||:)"
+              route="$(oc get route -n istio-system aligned-granite-${USER_PROJECT} -ojsonpath='{.status.ingress[0].host}' 2>/dev/null ||:)"
               echo -n .
               if [ -n "$route" ]; then
                   break
