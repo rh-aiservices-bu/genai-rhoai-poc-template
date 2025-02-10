@@ -28,7 +28,12 @@ list_args+=(--output json)
 mkdir -p download
 logcmd cd download
 while read -r object; do
-    logcmd ibmcloud cos download "${common_args[@]}" --key "$object"
+    dest=$(echo "$object" | sed "s,${S3_SYNC_COS_MODEL_PREFIX}/,,")
+    dest_dir="$(dirname "$dest")"
+    if [ "$dest_dir" != "." ]; then
+        logcmd mkdir -p "$dest_dir"
+    fi
+    logcmd ibmcloud cos download "${common_args[@]}" --key "$object" "$dest"
 done < <(logcmd ibmcloud cos list-objects-v2 "${list_args[@]}" | logcmd jq -r '.Contents[].Key')
 
 # Create some useful variables for s3cfg
