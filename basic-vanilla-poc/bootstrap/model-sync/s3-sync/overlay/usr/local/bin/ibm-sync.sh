@@ -36,6 +36,8 @@ while read -r object; do
     logcmd ibmcloud cos download "${common_args[@]}" --key "$object" "$dest"
 done < <(logcmd ibmcloud cos list-objects-v2 "${list_args[@]}" | logcmd jq -r '.Contents[].Key')
 
+logcmd ls -halF
+
 # Create some useful variables for s3cfg
 scheme=$(echo "$AWS_S3_ENDPOINT" | cut -d: -f1)
 s3_host=$(echo "$AWS_S3_ENDPOINT" | cut -d/ -f3-)
