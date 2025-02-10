@@ -32,4 +32,10 @@ spec:
                 name: demo-models
             - secretRef:
                 name: model-source
+          volumeMounts:
+            - name: workdir
+              mountPath: /workdir
+      volumes:
+        - name: workdir
+          emptyDir: {}
       restartPolicy: Never
