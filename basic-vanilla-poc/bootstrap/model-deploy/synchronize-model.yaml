@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
         - name: s3-sync
-          image: quay.io/jharmison/s3-sync:0.4.0
+          image: quay.io/jharmison/s3-sync:0.4.1
           imagePullPolicy: IfNotPresent
           command:
             - /bin/bash
