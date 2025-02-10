@@ -23,7 +23,7 @@ spec:
       containers:
         - name: s3-sync
           image: image-registry.openshift-image-registry.svc:5000/demo/s3-sync:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           args:
           - -vvvvv
           - --no-dest-validate
