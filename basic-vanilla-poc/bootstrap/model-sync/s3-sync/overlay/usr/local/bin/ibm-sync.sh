@@ -11,7 +11,7 @@ logcmd ibmcloud config --check-version=false
 
 if [ -n "$S3_SYNC_COS_TEMPORARY_PASSCODE" ]; then
     echo "+ ibmcloud login -a https://cloud.ibm.com -u passcode -p <censored>" >&2
-    ibmcloud login -a https://cloud.ibm.com -u passcode -p "${S3_SYNC_COS_TEMPORARY_PASSCODE}"
+    ibmcloud login -a https://cloud.ibm.com -u passcode -p "${S3_SYNC_COS_TEMPORARY_PASSCODE}" --no-region
 fi
 
 if [ -n "$S3_SYNC_COS_INSTANCE_CRN}" ]; then
