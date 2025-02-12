@@ -54,20 +54,22 @@ flowchart TD
         demoProject -- before --> mcgwConfig
     end
     subgraph userProcess[Model Synchronization]
-        modelSource{The user of this automation specifies the model source}
+        modelSource{The user of this automation specifies the model source, or indicates that they synchronized it manually}
         modelSync[[The model is synchronized from its source automatically]]
-        modelSource -- before --> modelSync
+        modelSource -- optional --> modelSync
     end
-    MCGW -- before -----> userProcess
     subgraph Last
         direction TB
         modelDeploy[[Deploy the model using vLLM and KServe, exposing access publicly and requiring token authentication]]
         deployAnythingLLM[[Create AnythingLLM workbench, pre-wired to use the deployed model as its default LLM provider]]
     end
     pocReady(PoC is ready for you to evaluate the aligned model)
+
+    MCGW -- before -----> userProcess
     RHOAI -- before --> modelDeploy
-    modelSync -- before --> modelDeploy -- before --> deployAnythingLLM
-    deployAnythingLLM --> pocReady
+    modelSource -- or --> modelDeploy
+    modelSync -- or --> modelDeploy
+    modelDeploy -- before --> deployAnythingLLM --> pocReady
 ```
 
 There are two main phases for the automation, broken out simply as "First" and "Last" above. The "Model Synchronization" phase relies on user input, because the catalog item is generic and the aim is to deploy specific models. The automation for the "Last" section will all be hung up, waiting for the user to provide information on the model source so that synchronization can proceed.
