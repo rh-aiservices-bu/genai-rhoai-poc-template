@@ -34,13 +34,6 @@ title: GenAI RHOAI PoC Roll-out
 flowchart TD
     subgraph First
         direction TB
-        subgraph RHOAI
-            direction LR
-            rhoaiInstall[[Install the Red Hat OpenShift AI Operator]]
-            rhoaiDeploy[[Create DataScienceCluster]]
-            rhoaiConfig[[Create workbench ImageStreams and other configuration]]
-            rhoaiInstall -- before --> rhoaiDeploy -- before --> rhoaiConfig
-        end
         demoProject[[Create the Demo project]]
         subgraph MCGW
             direction LR
@@ -48,6 +41,13 @@ flowchart TD
             mcgwDeploy[["Configure ODF to deploy Multi-Cloud Gateway (MCGW) only"]]
             mcgwConfig[[Create an ObjectBucketClaim and RHOAI Data Connection for it]]
             mcgwInstall -- before --> mcgwDeploy -- before --> mcgwConfig
+        end
+        subgraph RHOAI
+            direction LR
+            rhoaiInstall[[Install the Red Hat OpenShift AI Operator]]
+            rhoaiDeploy[[Create DataScienceCluster]]
+            rhoaiConfig[[Create workbench ImageStreams and other configuration]]
+            rhoaiInstall -- before --> rhoaiDeploy -- before --> rhoaiConfig
         end
         workbenchPrimer[[Pull the workbench images to nodes in the cluster]]
         rhoaiConfig-. before .-> workbenchPrimer
