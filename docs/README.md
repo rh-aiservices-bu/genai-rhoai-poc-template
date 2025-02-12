@@ -66,7 +66,7 @@ flowchart TD
     pocReady(PoC is ready for you to evaluate the aligned model)
 
     MCGW -- before -----> userProcess
-    RHOAI -- before --> modelDeploy
+    RHOAI -- before --> Last
     modelSource -- or --> modelDeploy
     modelSync -- or --> modelDeploy
     modelDeploy -- before --> deployAnythingLLM --> pocReady
