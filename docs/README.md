@@ -50,12 +50,14 @@ flowchart TD
             rhoaiInstall -- before --> rhoaiDeploy -- before --> rhoaiConfig
         end
         workbenchPrimer[[Pull the workbench images to nodes in the cluster]]
+
         rhoaiConfig-. before .-> workbenchPrimer
         demoProject -- before --> mcgwConfig
     end
     subgraph userProcess[Model Synchronization]
         modelSource{The user of this automation specifies the model source, or indicates that they synchronized it manually}
         modelSync[[The model is synchronized from its source automatically]]
+
         modelSource -- optional --> modelSync
     end
     subgraph Last
