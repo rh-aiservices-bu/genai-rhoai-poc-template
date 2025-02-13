@@ -121,7 +121,78 @@ Following this, you can trigger the automation to continue by following the fina
 
 ### Local files via ODH TEC upload
 
-TODO
+[OpenDataHub Tools & Extensions Companion](https://github.com/opendatahub-io-contrib/odh-tec) (ODH TEC) is an upstream graphical toolkit designed to integrate into ODH/RHOAI to help with a few activities, including providing a graphical user interface for managing S3 buckets, with file upload capability. The image for ODH TEC has been added to your cluster as part of the First phase of automation, but an instance has not been deployed. You can deploy a Workbench with the ODH TEC image, providing the `demo-models` Data Connection (which was wired up in the First phase already), and upload the model from there.
+
+To create and open the ODH TEC Workbench, follow these steps:
+
+1. From the OpenShift Console, access the Applications menu, visible as a grid of 9 squares in the top right corner.
+    - ![openshift-applications](images/openshift-applications.png)
+1. Select Red Hat OpenShift AI, usually at the bottom of the list
+    - ![rhoai-app](images/rhoai-app.png)
+1. In the Data Science Projects section, click on Demo Project
+    - ![demo-project](images/demo-project.png)
+1. Select the Workbenches tab
+    - ![workbenches-tab](images/workbenches-tab.png)
+1. On the right side, near the top, click Create workbench
+    - ![create-workbench](images/create-workbench.png)
+1. Update the fields as follows
+    - `Name` to
+        ```
+        ODH TEC
+        ```
+    - `Image selection` to
+        ```
+        CUSTOM: ODH-TEC
+        ```
+    - `Container size` to
+        ```
+        Small
+    - `Persistent storage size` to
+        ```
+        1 GiB
+        ```
+    - Select `Attach existing connections`
+        - ![attach-existing-connections](images/attach-existing-connections.png)
+    - Using the pull-down combo-box, select `Demo Models`
+        - ![attached-connection](images/attached-connection.png)
+    - Click outside of the open combo-box and select `Attach`
+        - ![attach](images/attach.png)
+1. Confirm that your Workbench settings match the image below:
+    - ![workbench-final](images/workbench-final.png)
+1. In the bottom left, click Create workbench
+    - ![create-workbench](images/create-workbench.png)
+1. Observe the Workbench going from "Starting" to "Running"
+    - ![workbench-starting](images/workbench-starting.png)
+    - ![workbench-running](images/workbench-running.png)
+1. Click the "Open" link for the ODH TEC Workbench
+    - ![workbench-open](images/workbench-open.png)
+1. Sign in using your OpenShift credentials
+    - ![workbench-login](images/workbench-login.png)
+1. Accept the disclaimer, highlighting that this is not a supported RHOAI component.
+    - ![odh-tec-disclaimer](images/odh-tec-disclaimer.png)
+1. Confirm that the `Bucket Selection` field is pre-populated with the cluster's generated ObjectBucketClaim. It should look similar to the following, if your Data Connection was selected properly:
+    - ![odh-tec-bucket](images/odh-tec-bucket.png)
+
+Because the automation that follows has specific expectations about where you load your aligned model, we need to make sure that your upload goes to the correct place. Ensure you follow these steps carefully:
+
+1. Select Create Folder
+    - ![create-folder](images/create-folder.png)
+1. Enter the following for the Folder name:
+    ```
+    models
+    ```
+1. Select Create
+    - ![create](images/create-white-bg.png)
+1. Select the new "models" folder
+    - ![models-folder](images/models-folder.png)
+1. Select Upload Multiple Files
+    - ![upload-multiple-files](images/upload-multiple-files.png)
+1. Select the Upload button and navigate to your files, using Shift and Ctrl to select them, or drag and drop them into the dialog
+    - ![select-files](images/select-files.png)
+1. Wait for the upload to complete
+    - ![upload-in-progress](images/upload-in-progress.png)
+
+Following this, you can trigger the automation to continue by following the finalization instructions [below](#manual-upload-finalization).
 
 ### Local files manually
 
