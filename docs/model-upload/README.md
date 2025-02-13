@@ -24,6 +24,8 @@ To create the `model-source` Secret in the `demo` namespace, as any of the follo
 
 You can also copy the content of the Secret from the repository, use the ![plus](images/plus.png) button in the top right of the OpenShift Console to access the "Import YAML" page, and then paste the secret content there before editing it to match the values you desire and clicking ![create](images/create.png).
 
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
+
 ### Source S3 bucket (AWS S3, IBM COS with a Service Account, etc.)
 
 Your `model-source` Secret needs to contain the S3 credentials (and optionally the endpoint) of your source, the bucket the model is in, and any prefixes to the S3 key of the model files.
@@ -33,6 +35,8 @@ Your `model-source` Secret needs to contain the S3 credentials (and optionally t
 In this example, there is a bucket in AWS region `us-east-1` named `bucket`, and the model files are uploaded as, for example, `s3://bucket/folder/config.json` and `s3://bucket/folder/model-00001-of-00004.safetensors` etc. STS and other more robust authentication methods are not supported for this.
 
 When this secret is created (using the methods described [above](#creating-the-secret)), with correct details for the model source, the `synchronize-model` job will synchronize the model directly from the source bucket into the on-cluster MCGW-backed bucket, allowing automation to continue with the Last phase.
+
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
 
 ### IBM COS via temporary passcode
 
@@ -61,6 +65,8 @@ To update the Secret, log in to the IBM InstructLab service as described in the 
         - ![one time passcode](images/log-in-passcode.png)
         - `S3_SYNC_COS_TEMPORARY_PASSCODE` updated with this value
 1. Create the secret using the methods described [above](#creating-the-secret)
+
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
 
 ### Local files via CLI (with automation)
 
@@ -127,9 +133,13 @@ ls aligned-model
 
 Following this, you can trigger the automation to continue by following the finalization instructions [below](#manual-upload-finalization).
 
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
+
 ### Local files via ODH TEC upload
 
 [OpenDataHub Tools & Extensions Companion](https://github.com/opendatahub-io-contrib/odh-tec) (ODH TEC) is an upstream graphical toolkit designed to integrate into ODH/RHOAI to help with a few activities, including providing a graphical user interface for managing S3 buckets, with file upload capability. The image for ODH TEC has been added to your cluster as part of the First phase of automation, but an instance has not been deployed. You can deploy a Workbench with the ODH TEC image, providing the `demo-models` Data Connection (which was wired up in the First phase already), and upload the model from there.
+
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
 
 #### Creating an ODH TEC Workbench
 
@@ -183,6 +193,8 @@ The following steps are designed to create an ODH TEC workbench that is pre-wire
 1. Confirm that the `Bucket Selection` field is pre-populated with the cluster's generated ObjectBucketClaim. It should look similar to the following, if your Data Connection was selected properly:
     - ![odh-tec-bucket](images/odh-tec-bucket.png)
 
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
+
 #### Uploading Model Files Using ODH TEC
 
 Because the automation that follows has specific expectations about where you load your aligned model, we need to make sure that your upload goes to the correct place. Ensure you follow these steps carefully:
@@ -206,12 +218,18 @@ Because the automation that follows has specific expectations about where you lo
 
 Following this, you can trigger the automation to continue by following the finalization instructions [below](#manual-upload-finalization).
 
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
+
 ### Local files manually
 
 TODO
+
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
 
 #### Manual Upload Finalization
 
 After the model files are uploaded manually, using any method, the `synchronize-model` Job remains unable to start. Because this Job is holding up the Last phase of the automation, we need to make it complete successfully. The Job will start if a Secret with the right name is created, and it will exit early if given a specific flag to indicate that a manual upload was created. You can use the method documented [above](#creating-the-secret) with a secret containing this value, unmodified from the example linked below, to trigger the rest of the automation to roll out. It's important that your model be uploaded not only to the bucket inside the cluster, but at the correct directory. Ensure that you're following the instructions in your chosen method for this to happen.
 
 [Example Manual Upload Complete Secret](example-src-local.yaml).
+
+<sub>Return to the [Table of Contents](#table-of-contents)</sub>
