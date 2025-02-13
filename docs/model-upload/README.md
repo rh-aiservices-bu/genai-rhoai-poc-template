@@ -32,7 +32,7 @@ Your `model-source` Secret needs to contain the information about the IBM COS in
 
 [Example IBM COS Secret](example-src-ibm.yaml).
 
-To get the information needed to update the Secret:
+To update the Secret, log in to the IBM InstructLab service as described in the PoC Guide and execute the following steps.
 
 1. Navigate to the ![Aligned models](images/aligned-models.png) page
 1. Find your model in the list and click ![Open](images/model-open.png) in the Object storage column
