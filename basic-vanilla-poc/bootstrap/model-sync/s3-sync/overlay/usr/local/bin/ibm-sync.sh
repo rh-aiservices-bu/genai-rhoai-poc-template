@@ -11,24 +11,25 @@ logcmd ibmcloud config --check-version=false
 
 if [ -n "$S3_SYNC_COS_TEMPORARY_PASSCODE" ]; then
     echo "+ ibmcloud login -a https://cloud.ibm.com -u passcode -p <censored> --no-region" >&2
-    ibmcloud login -a https://cloud.ibm.com -u passcode -p "${S3_SYNC_COS_TEMPORARY_PASSCODE}" --no-region
+    ibmcloud login -a https://cloud.ibm.com -u passcode -p "$S3_SYNC_COS_TEMPORARY_PASSCODE" --no-region
 fi
 
-if [ -n "$S3_SYNC_COS_INSTANCE_CRN}" ]; then
-    logcmd ibmcloud cos config crn --crn "${S3_SYNC_COS_INSTANCE_CRN}"
+if [ -n "$S3_SYNC_COS_INSTANCE_CRN" ]; then
+    crn="$(echo "$S3_SYNC_COS_INSTANCE_CRN" | awk -F: '{$9=""; $10=""; print}' OFS=:)"
+    logcmd ibmcloud cos config crn --crn "$crn"
 fi
 
-common_args=(--bucket ${S3_SYNC_COS_BUCKET} --region ${S3_SYNC_COS_INSTANCE_REGION})
+common_args=(--bucket "$S3_SYNC_COS_BUCKET" --region "$S3_SYNC_COS_INSTANCE_REGION")
 list_args=("${common_args[@]}")
 if [ -n "$S3_SYNC_COS_MODEL_PREFIX" ]; then
-    list_args+=(--prefix "${S3_SYNC_COS_MODEL_PREFIX}")
+    list_args+=(--prefix "$S3_SYNC_COS_MODEL_PREFIX")
 fi
 list_args+=(--output json)
 
 mkdir -p download
 logcmd cd download
 while read -r object; do
-    dest=$(echo "$object" | sed "s,${S3_SYNC_COS_MODEL_PREFIX}/,,")
+    dest=$(echo "$object" | sed "s,$S3_SYNC_COS_MODEL_PREFIX/,,")
     dest_dir="$(dirname "$dest")"
     if [ "$dest_dir" != "." ]; then
         logcmd mkdir -p "$dest_dir"
@@ -54,14 +55,14 @@ check_ssl_hostname = True
 connection_pooling = True
 guess_mime_type = True
 use_mime_magic = True
-access_key = ${AWS_ACCESS_KEY_ID}
-secret_key = ${AWS_SECRET_ACCESS_KEY}
-bucket_location = ${AWS_DEFAULT_REGION}
-host_base = ${s3_host}
-host_bucket = ${s3_host}
-use_https = ${use_https}
+access_key = $AWS_ACCESS_KEY_ID
+secret_key = $AWS_SECRET_ACCESS_KEY
+bucket_location = $AWS_DEFAULT_REGION
+host_base = $s3_host
+host_bucket = $s3_host
+use_https = $use_https
 EOF
 
-dest="s3://${AWS_S3_BUCKET}/models/"
+dest="s3://$AWS_S3_BUCKET/models/"
 logcmd s3cmd sync --no-delete-removed ./ "$dest"
 logcmd s3cmd ls "$dest"
