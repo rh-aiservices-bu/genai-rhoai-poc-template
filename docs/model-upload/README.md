@@ -213,7 +213,7 @@ Because the automation that follows has specific expectations about where you lo
     - ![upload-multiple-files](images/upload-multiple-files.png)
 1. Select the Upload button and navigate to your files, using Shift and Ctrl to select them, or drag and drop them into the dialog
     - ![select-files](images/select-files.png)
-1. Wait for the upload to complete
+1. Wait for the upload to complete - ODH-TEC will upload the files two at a time
     - ![upload-in-progress](images/upload-in-progress.png)
 
 Following this, you can trigger the automation to continue by following the finalization instructions [below](#manual-upload-finalization).
@@ -222,7 +222,27 @@ Following this, you can trigger the automation to continue by following the fina
 
 ### Local files manually
 
-TODO
+If you have a preferred GUI or CLI tool that you're comfortable with and want to upload the files your own way, that's perfectly accomplishable. You'll need to recover the endpoint, HMAC credentials, and bucket information to accomplish it. These have already been mostly consolidated by the automation, so it would be simplest to use that.
+
+To get the public S3 endpoint, use the following command:
+
+```shell
+echo "https://$(oc get route -n openshift-storage s3 -ojsonpath='{.status.ingress[0].host}')"
+```
+
+To get the HMAC credentials and bucket name (it's got a randomly-generated UUID component), use the following command:
+
+```shell
+echo; oc get secret -n demo demo-models -ogo-template='AWS_ACCESS_KEY_ID: {{ .data.AWS_ACCESS_KEY_ID | base64decode }}
+AWS_SECRET_ACCESS_KEY: {{ .data.AWS_SECRET_ACCESS_KEY | base64decode }}
+Bucket name: {{ .data.AWS_S3_BUCKET | base64decode }}{{ "\n" }}'
+```
+
+The region you use in your tool doesn't matter, as it's ignored.
+
+Although S3 doesn't natively have a concept of "folders," many clients that interact with it do. When you upload the model files (`config.json`, the various `.safetensors` files, etc.), ensure that they live inside the `models/` folder in the bucket, as this is where the follow-on automation will expect the model files to be.
+
+Following this, you can trigger the automation to continue by following the finalization instructions [below](#manual-upload-finalization).
 
 <sub>Return to the [Table of Contents](#table-of-contents)</sub>
 
