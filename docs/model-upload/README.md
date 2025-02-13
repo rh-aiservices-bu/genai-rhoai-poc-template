@@ -123,7 +123,9 @@ Following this, you can trigger the automation to continue by following the fina
 
 [OpenDataHub Tools & Extensions Companion](https://github.com/opendatahub-io-contrib/odh-tec) (ODH TEC) is an upstream graphical toolkit designed to integrate into ODH/RHOAI to help with a few activities, including providing a graphical user interface for managing S3 buckets, with file upload capability. The image for ODH TEC has been added to your cluster as part of the First phase of automation, but an instance has not been deployed. You can deploy a Workbench with the ODH TEC image, providing the `demo-models` Data Connection (which was wired up in the First phase already), and upload the model from there.
 
-To create and open the ODH TEC Workbench, follow these steps:
+#### Creating an ODH TEC Workbench
+
+The following steps are designed to create an ODH TEC workbench that is pre-wired to connect to the cluster-local S3 bucket provisioned on MCGW by the automation.
 
 1. From the OpenShift Console, access the Applications menu, visible as a grid of 9 squares in the top right corner.
     - ![openshift-applications](images/openshift-applications.png)
@@ -172,6 +174,8 @@ To create and open the ODH TEC Workbench, follow these steps:
     - ![odh-tec-disclaimer](images/odh-tec-disclaimer.png)
 1. Confirm that the `Bucket Selection` field is pre-populated with the cluster's generated ObjectBucketClaim. It should look similar to the following, if your Data Connection was selected properly:
     - ![odh-tec-bucket](images/odh-tec-bucket.png)
+
+#### Uploading Model Files Using ODH TEC
 
 Because the automation that follows has specific expectations about where you load your aligned model, we need to make sure that your upload goes to the correct place. Ensure you follow these steps carefully:
 
