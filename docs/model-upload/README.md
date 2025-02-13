@@ -36,7 +36,8 @@ To get the information needed to update the Secret:
 
 1. Navigate to the ![Aligned models](images/aligned-models.png) page
 1. Find your model in the list and click ![Open](images/model-open.png) in the Object storage column
-1. The Filter bar (![filter bar](images/filter-bar.png)) above your objects is pre-populated with the prefix for your model files inside the bucket. You need to update the Secret with this value, so copy it.
+1. The Filter bar above your objects is pre-populated with the prefix for your model files inside the bucket. You need to update the Secret with this value, so copy from the field:
+    - ![filter bar](images/filter-bar.png)
     - `S3_SYNC_COS_MODEL_PREFIX` should be updated to reflect this value
 1. Click on ![Configuration](images/instance-configuration.png) in the navigation bar under the bucket name
 1. In the `Bucket Details` section, recover the following:
