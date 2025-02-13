@@ -2,19 +2,27 @@
 
 The automation hangs in between the First and Last phases, waiting for model synchronization to complete before it can continue. The hanging, on a freshly provisioned cluster, occurs because a Kubernetes Secret has been specified as an Environment Variable source for a Kubernetes Job named `synchronize-model`. That Secret is not deployed by the automation. The content of that secret determines how the Job behaves. The Last phase of automation expects that completion of this Job means that the model has been completely uploaded to the ObjectBucketClaim's defined Bucket under the subdirectory `models/`.
 
-There are several ways to get the job to complete, with three of the ones documented below requiring that you download the model to your workstation and two of them only requiring that your provide the credentials and configuration to access the model hosted somewhere accessible to the cluster, allowing the Job to perform the synchronization from directly inside the PoC cluster. Use whichever one works based on where your model is, what credentials you have access to, and whatever you're more comfortable with.
+There are several ways to get the job to complete, with some requiring that you download the model to your workstation and a few options requiring only that you provide the credentials and configuration to access the model hosted somewhere accessible to the cluster, allowing the Job to perform the synchronization from directly inside the PoC cluster. Use whichever one works based on where your model is, what credentials you have access to, and whatever you're more comfortable with.
+
+## Table of Contents
+
+- [Creating the Secret](#creating-the-secret) (instructions for Secret creation for any method)
+- Automatic, in-cluster, synchronization
+    1. [From a Source S3 bucket](#source-s3-bucket-aws-s3-ibm-cos-with-a-service-account-etc)
+    1. [From IBM COS via temporary passcode](#ibm-cos-via-temporary-passcode)
+- Manual upload, from your workstation or another host
+    1. [Local files via CLI (with automation)](#local-files-via-cli-with-automation)
+    1. [Local files via ODH TEC upload](#local-files-via-odh-tec-upload)
+        1. [Creating an ODH TEC Workbench](#creating-an-odh-tec-workbench)
+        1. [Uploading Model Files Using ODH TEC](#uploading-model-files-using-odh-tec)
+    1. [Local files manually](#local-files-manually)
+    1. [Manual Upload Finalization](#manual-upload-finalization) (to be run after any of the above)
 
 ## Creating the Secret
 
-To create the `model-source` Secret in the `demo` namespace, as any of the following methods require, you can edit one of the examples provided (and linked below where appropriate) and then use the `oc apply -f path/to/secret.yaml` or similar, if logged in on the command line. You can also copy the content of the Secret from the repository, use the ![plus](images/plus.png) button in the top right of the OpenShift Console to access the "Import YAML" page, and then paste the secret content there before editing it to match the values you desire and clicking ![create](images/create.png).
+To create the `model-source` Secret in the `demo` namespace, as any of the following methods require, you can edit one of the examples provided (and linked below where appropriate) and then use the `oc apply -f path/to/secret.yaml` or similar, if logged in on the command line.
 
-## Model Synchronization Options
-
-1. [From a source S3 bucket](#source-s3-bucket-aws-s3-ibm-cos-with-a-service-account-etc) (synchronize inside cluster)
-1. [From IBM COS via temporary passcode](#ibm-cos-via-temporary-passcode) (synchronize inside cluster)
-1. [Local files via CLI (with automation)](#local-files-via-cli-with-automation) (uploaded from your workstation)
-1. [Local files via ODH TEC upload](#local-files-via-odh-tec-upload) (uploaded from your workstation)
-1. [Local files manually](#local-files-manually) (uploaded from your workstation)
+You can also copy the content of the Secret from the repository, use the ![plus](images/plus.png) button in the top right of the OpenShift Console to access the "Import YAML" page, and then paste the secret content there before editing it to match the values you desire and clicking ![create](images/create.png).
 
 ### Source S3 bucket (AWS S3, IBM COS with a Service Account, etc.)
 
