@@ -11,7 +11,7 @@ To create the `model-source` Secret in the `demo` namespace, as any of the follo
 ## Model Synchronization Options
 
 1. [From a source S3 bucket](#source-s3-bucket-aws-s3-ibm-cos-with-a-service-account-etc) (synchronize inside cluster)
-1. [From IBM COS via temporary passcode](#from-ibm-cos-via-temporary-passcode) (synchronize inside cluster)
+1. [From IBM COS via temporary passcode](#ibm-cos-via-temporary-passcode) (synchronize inside cluster)
 1. [Local files via CLI (with automation)](#local-files-via-cli-with-automation) (uploaded from your workstation)
 1. [Local files via ODH TECH upload](#local-files-via-odh-tec-upload) (uploaded from your workstation)
 1. [Local files manually](#local-files-manually) (uploaded from your workstation)
