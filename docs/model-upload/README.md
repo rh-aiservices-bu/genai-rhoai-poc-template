@@ -215,6 +215,8 @@ Because the automation that follows has specific expectations about where you lo
     - ![select-files](images/select-files.png)
 1. Wait for the upload to complete - ODH-TEC will upload the files two at a time
     - ![upload-in-progress](images/upload-in-progress.png)
+1. When the upload shows complete, you can click Close and/or exit the ODH TEC browser tab
+    - ![upload-complete](images/upload-complete.png)
 
 Following this, you can trigger the automation to continue by following the finalization instructions [below](#manual-upload-finalization).
 
