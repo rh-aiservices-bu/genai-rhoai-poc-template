@@ -16,7 +16,7 @@ spec:
   source:
     git:
       uri: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-      ref: feat/enable-ibmcloud-cli-download
+      ref: dev
     contextDir: basic-vanilla-poc/bootstrap/model-sync/s3-sync
   strategy:
     dockerStrategy:
