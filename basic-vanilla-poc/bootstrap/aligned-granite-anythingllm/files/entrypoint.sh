@@ -4,9 +4,10 @@
 
 echo -n 'Waiting for rhods-dashboard route'
 while true; do
-    dashboard_route="https://$(oc get route rhods-dashboard -n redhat-ods-applications -o jsonpath='{.spec.host}')"
+    dashboard_route="$(oc get route rhods-dashboard -n redhat-ods-applications -o jsonpath='{.spec.host}' 2>/dev/null)"
     echo -n .
     if [ -n "$dashboard_route" ]; then
+        dashboard_route="https://${dashboard_route}"
         break
     fi
     sleep 5
