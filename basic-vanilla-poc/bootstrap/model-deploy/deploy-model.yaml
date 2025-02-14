@@ -110,11 +110,11 @@ spec:
       name: ""
       resources:
         limits:
-          cpu: "4"
-          memory: 12Gi
+          cpu: "8"
+          memory: 10Gi
           nvidia.com/gpu: "1"
         requests:
-          cpu: "2"
+          cpu: "4"
           memory: 8Gi
           nvidia.com/gpu: "1"
       runtime: aligned-granite
