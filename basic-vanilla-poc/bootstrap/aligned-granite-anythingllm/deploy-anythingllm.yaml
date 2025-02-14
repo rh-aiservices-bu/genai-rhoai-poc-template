@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deploy-anythingllm
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      serviceAccountName: deploy-anythingllm
+      containers:
+      - name: create-and-apply-resources
+        image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+        - /app/entrypoint.sh
+        envFrom:
+        - configMapRef:
+              name: deploy-anythingllm-config
+        volumeMounts:
+        - name: deploy-anythingllm-files
+          mountPath: /app
+      volumes:
+      - name: deploy-anythingllm-files
+        configMap:
+          name: deploy-anythingllm-files
+      restartPolicy: Never

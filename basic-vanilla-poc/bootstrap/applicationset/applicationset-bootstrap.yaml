@@ -50,15 +50,10 @@ spec:
         path: basic-vanilla-poc/bootstrap/model-deploy
         prune: "false"
       - cluster: in-cluster
-        name: poc-primer
+        name: aligned-granite-anythingllm
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev
-        path: basic-vanilla-poc/bootstrap/primer
-      - cluster: in-cluster
-        name: anythingllm
-        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
-        targetRevision: dev
-        path: basic-vanilla-poc/bootstrap/anythingllm
+        path: basic-vanilla-poc/bootstrap/aligned-granite-anythingllm
   template:
     metadata:
       name: "{{ .name }}"
