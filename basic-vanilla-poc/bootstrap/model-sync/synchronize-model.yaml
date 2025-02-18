@@ -1,0 +1,41 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: synchronize-model
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      serviceAccount: trigger-rebuild
+      serviceAccountName: trigger-rebuild
+      initContainers:
+      - name: trigger-rebuild
+        image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+        - -xc
+        - |-
+          oc start-build --wait=true s3-sync
+      containers:
+        - name: s3-sync
+          image: image-registry.openshift-image-registry.svc:5000/demo/s3-sync:latest
+          imagePullPolicy: Always
+          args:
+          - -vvvvv
+          - --no-dest-validate
+          envFrom:
+            - secretRef:
+                name: demo-models
+            - secretRef:
+                name: model-source
+          volumeMounts:
+            - name: workdir
+              mountPath: /workdir
+      volumes:
+        - name: workdir
+          emptyDir: {}
+      restartPolicy: Never
