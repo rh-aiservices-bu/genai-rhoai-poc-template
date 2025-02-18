@@ -1,0 +1,23 @@
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: aligned-granite-endpoint
+  namespace: $USER_PROJECT
+  labels:
+    opendatahub.io/dashboard: 'true'
+  annotations:
+    opendatahub.io/connection-type-ref: anythingllm-generic-openai
+    openshift.io/description: Connect to the aligned Granite model
+    openshift.io/display-name: RHOAI-Hosted Aligned Granite
+stringData:
+  DISABLE_TELEMETRY: "true"
+  GENERIC_OPEN_AI_MODEL_PREF: aligned-granite
+  LLM_PROVIDER: generic-openai
+  GENERIC_OPEN_AI_BASE_PATH: "https://${model_route}/v1"
+  EMBEDDING_ENGINE: native
+  GENERIC_OPEN_AI_API_KEY: "${api_key}"
+  GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT: "4096"
+  VECTOR_DB: lancedb
+  GENERIC_OPEN_AI_MAX_TOKENS: "2048"
+type: Opaque

@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: demo
+
+resources:
+  # wave 0
+  - config.yaml
+  - pvc.yaml
+  - rbac.yaml
+  - deploy-anythingllm.yaml
+
+configMapGenerator:
+  - name: deploy-anythingllm-files
+    files:
+      - files/anythingllm-data-connection.yaml
+      - files/anythingllm-workbench.yaml
+      - files/entrypoint.sh
+
+# This ensures that we can use the kustomization to update the CRB if needed
+patches:
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRoleBinding
+    patch: |-
+      - op: replace
+        path: /subjects/0/namespace
+        value: demo
+  - target:
+      version: v1
+      kind: ConfigMap
+      name: deploy-anythinllm-config
+    patch: |-
+      - op: replace
+        path: /data/USER_PROJECT
+        value: demo
