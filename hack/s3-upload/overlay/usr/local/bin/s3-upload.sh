@@ -8,8 +8,29 @@ if ! oc whoami >/dev/null 2>&1; then
     exit 1
 fi
 
-if (("${#}" < 1)); then
+paths_to_upload=()
+
+function show_usage {
     echo "usage: upload.sh PATH [PATH [...]]" >&2
+}
+
+while (("${#}" > 0)); do
+    case "$1" in
+    *)
+        if [ -d "$1" ]; then
+            paths_to_upload+=("$1")
+        else
+            echo "Non-directory path provided: $1" >&2
+            show_usage
+            exit 1
+        fi
+        ;;
+    esac
+    shift
+done
+
+if ((${#paths_to_upload} < 1)); then
+    show_usage
     exit 0
 fi
 
@@ -45,7 +66,7 @@ else
     use_https=True
 fi
 
-cat <<EOF >/tmp/s3cfg
+cat <<EOF >/s3cmd/.s3cfg
 [default]
 check_ssl_certificate = True
 check_ssl_hostname = True
@@ -62,15 +83,14 @@ EOF
 
 function s3cmd {
     set -x
-    /usr/local/bin/s3cmd -c /tmp/s3cfg "${@}"
+    /usr/local/bin/s3cmd "${@}"
     { set +x; } 2>/dev/null
 }
 dest="s3://${AWS_S3_BUCKET}/models/"
 
 # Upload directories recursively, using
-for input in "${@}"; do
-    s3cmd put --recursive "$input" "$dest"
+for input in "${paths_to_upload[@]}"; do
+    s3cmd sync --no-delete-removed "$input" "$dest"
 done
 
-set -x
 s3cmd ls "$dest"
