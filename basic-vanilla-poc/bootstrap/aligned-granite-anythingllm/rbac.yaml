@@ -7,7 +7,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: trigger-rebuild-namespace-edit
+  name: deploy-anythingllm-namespace-edit
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -28,7 +28,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: deploy-anythingllm
+  name: deploy-anythingllm-gloabl-route-reader
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
