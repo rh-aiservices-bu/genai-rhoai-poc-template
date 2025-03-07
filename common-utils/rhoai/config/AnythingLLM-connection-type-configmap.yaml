@@ -1,0 +1,103 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: anythingllm-generic-openai
+  namespace: redhat-ods-applications
+  labels:
+    opendatahub.io/connection-type: 'true'
+    opendatahub.io/dashboard: 'true'
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    opendatahub.io/disabled: 'false'
+    opendatahub.io/username: admin
+    openshift.io/description: This Connection Type allows you to store your API details.
+    openshift.io/display-name: AnythingLLM Credentials - Generic OpenAI
+data:
+  category: '["URI"]'
+  fields: '[
+    {
+      "type": "section",
+      "name": "AnythingLLM Config",
+      "description": ""
+    },
+    {
+      "type": "short-text",
+      "name": "LLM Provider Type",
+      "envVar": "LLM_PROVIDER",
+      "required": false,
+      "properties": {
+        "defaultValue": "generic-openai"
+      }
+    },
+    {
+      "type": "short-text",
+      "name": "Base URL",
+      "envVar": "GENERIC_OPEN_AI_BASE_PATH",
+      "properties": {
+        "defaultValue": "https://granite-3-8b-instruct.yourcluster.com:443/v1"
+      }
+    },
+    {
+      "type": "hidden",
+      "name": "API Key",
+      "envVar": "GENERIC_OPEN_AI_API_KEY",
+      "properties": {
+        "defaultValue": "your-token-here"
+      }
+    },
+    {
+      "type": "short-text",
+      "name": "Chat Model Name",
+      "envVar": "GENERIC_OPEN_AI_MODEL_PREF",
+      "properties": {
+        "defaultValue": "granite-3-8b-instruct",
+        "defaultReadOnly": false
+      }
+    },
+    {
+      "type": "numeric",
+      "name": "Token Context Window",
+      "envVar": "GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT",
+      "properties": {
+        "defaultValue": 4096,
+        "unit": "Tokens",
+        "min": 1,
+        "max": 4096
+      }
+    },
+    {
+      "type": "numeric",
+      "name": "Max Tokens",
+      "envVar": "GENERIC_OPEN_AI_MAX_TOKENS",
+      "properties": {
+        "unit": "Tokens",
+        "min": 1,
+        "max": 2048,
+        "defaultValue": 2048
+      }
+    },
+    {
+      "type": "short-text",
+      "name": "Embedding Provider",
+      "envVar": "EMBEDDING_ENGINE",
+      "properties": {
+        "defaultValue": "native"
+      }
+    },
+    {
+      "type": "short-text",
+      "name": "Vector Database Provider",
+      "envVar": "VECTOR_DB",
+      "properties": {
+        "defaultValue": "lancedb"
+      }
+    },
+    {
+      "type": "short-text",
+      "name": "Disable Telemetry",
+      "envVar": "DISABLE_TELEMETRY",
+      "properties": {
+        "defaultValue": "true"
+      }
+    }
+    ]'

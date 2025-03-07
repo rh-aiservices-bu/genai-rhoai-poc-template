@@ -1,0 +1,127 @@
+---
+apiVersion: authorino.kuadrant.io/v1beta3
+kind: AuthConfig
+metadata:
+  labels:
+    security.opendatahub.io/authorization-group: default
+  name: aligned-granite
+spec:
+  authentication:
+    kubernetes-user:
+      kubernetesTokenReview:
+        audiences:
+          - https://kubernetes.default.svc
+      metrics: false
+      priority: 0
+  authorization:
+    kubernetes-rbac:
+      kubernetesSubjectAccessReview:
+        resourceAttributes:
+          group:
+            value: serving.kserve.io
+          name:
+            value: aligned-granite
+          namespace:
+            value: demo
+          resource:
+            value: inferenceservices
+          subresource:
+            value: ""
+          verb:
+            value: get
+        user:
+          selector: auth.identity.user.username
+      metrics: false
+      priority: 0
+  hosts:
+    - aligned-granite-predictor.demo
+    - aligned-granite-predictor.demo.svc
+    - aligned-granite-predictor.demo.svc.cluster.local
+    - aligned-granite.demo
+    - aligned-granite.demo.svc
+    - aligned-granite.demo.svc.cluster.local
+---
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    opendatahub.io/accelerator-name: migrated-gpu
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: vLLM ServingRuntime for KServe
+    opendatahub.io/template-name: vllm-runtime
+    openshift.io/display-name: aligned-granite
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: aligned-granite
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  multiModel: false
+  supportedModelFormats:
+    - autoSelect: true
+      name: vLLM
+  containers:
+    - name: kserve-container
+      image: quay.io/modh/vllm:rhoai-2.16-cuda
+      command:
+        - python
+        - -m
+        - vllm.entrypoints.openai.api_server
+      args:
+        - --port=8080
+        - --model=/mnt/models
+        - --served-model-name={{.Name}}
+      env:
+        - name: HF_HOME
+          value: /tmp/hf_home
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: shm
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+  volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 2Gi
+      name: shm
+---
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: Aligned Granite
+    security.opendatahub.io/enable-auth: "true"
+    serving.knative.openshift.io/enablePassthrough: "true"
+    sidecar.istio.io/inject: "true"
+    sidecar.istio.io/rewriteAppHTTPProbers: "true"
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: aligned-granite
+spec:
+  predictor:
+    maxReplicas: 1
+    minReplicas: 1
+    model:
+      modelFormat:
+        name: vLLM
+      name: ""
+      resources:
+        limits:
+          cpu: "8"
+          memory: 10Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "4"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+      runtime: aligned-granite
+      storage:
+        key: demo-models
+        path: models/
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Exists

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: model-source
+  namespace: demo
+stringData:
+  S3_SYNC_USE_IBMCLOUD_CLI: "true"
+  S3_SYNC_COS_INSTANCE_CRN: "crn:v1:bluemix:public:cloud-object-storage:global:a/a7793fc96f8340ebb72a63a8238f2e61:b28d3bb7-644e-44fd-b661-305314352efc:bucket:etx-bofa"
+  S3_SYNC_COS_INSTANCE_REGION: us-geo
+  S3_SYNC_COS_BUCKET: etx-bofa
+  S3_SYNC_COS_MODEL_PREFIX: trained_models/7e366601-e054-4523-836b-63223578c1a0/model
+  S3_SYNC_COS_TEMPORARY_PASSCODE: AbCdEfG123

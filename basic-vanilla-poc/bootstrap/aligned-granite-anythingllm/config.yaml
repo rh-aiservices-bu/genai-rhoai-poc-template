@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: deploy-anythingllm-config
+data:
+  USER_NAME: user1
+  USER_PROJECT: demo
+  WORKBENCH_IMAGE: anythingllm-workbench:1.3

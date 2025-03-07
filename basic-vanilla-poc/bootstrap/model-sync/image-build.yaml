@@ -1,0 +1,27 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: s3-sync
+spec:
+  lookupPolicy:
+    local: true
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: s3-sync
+spec:
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+      ref: main
+    contextDir: basic-vanilla-poc/bootstrap/model-sync/s3-sync
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Containerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: s3-sync:latest

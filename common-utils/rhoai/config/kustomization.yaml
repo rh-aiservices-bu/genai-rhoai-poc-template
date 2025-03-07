@@ -6,3 +6,9 @@ resources:
   - validate-rhoai.yaml
     # wave 0
   - dashboardconfig.yaml
+    # wave 0
+  - AnythingLLM-connection-type-configmap.yaml   ## adds a new connection type for OpenAI-compatible model endpoints
+    # adding the custom images:
+  - workbench-imagestream-anythingllm.yaml
+  - workbench-imagestream-ilab.yaml
+  - workbench-imagestream-odh-tec.yaml

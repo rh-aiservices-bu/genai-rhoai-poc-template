@@ -1,0 +1,34 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  annotations:
+    opendatahub.io/notebook-image-creator: admin
+    opendatahub.io/notebook-image-desc: >-
+      VSCode image with all the libraries needed for running Instruct Lab on OpenShift AI.
+    opendatahub.io/notebook-image-name: "CUSTOM: InstructLab"
+    opendatahub.io/notebook-image-order: "03"
+    opendatahub.io/notebook-image-url: >-
+      https://github.com/rh-aiservices-bu/parasol-insurance/tree/main/bootstrap/workbench-image
+    opendatahub.io/recommended-accelerators: "[]"
+    argocd.argoproj.io/sync-wave: "1"
+  name: workbench-ilab
+  namespace: redhat-ods-applications
+  labels:
+    opendatahub.io/dashboard: "true"
+    opendatahub.io/notebook-image: "true"
+    app.kubernetes.io/created-by: byon
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: "0.21.0"
+      annotations:
+        openshift.io/imported-from: quay.io/rh-aiservices-bu/instructlab-workbench-code-server-cuda
+      from:
+        kind: DockerImage
+        name: >-
+          quay.io/rh-aiservices-bu/instructlab-workbench-code-server-cuda:0.21.0
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source

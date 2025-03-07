@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wait-for-model
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: wait-for-model
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: wait-for-model
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+subjects:
+- kind: ServiceAccount
+  name: wait-for-model
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: wait-for-model
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-for-model
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: wait-for-model
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo -n 'Waiting for model synchronization to complete'
+              while true; do
+                sync_complete=$(oc get job synchronize-model -ojsonpath='{range .status.conditions[?(@.type=="Complete")]}{.status}{end}' 2>/dev/null ||:)
+                if [ "$sync_complete" = "True" ]; then
+                  echo
+                  break
+                fi
+                echo -n '.'
+                sleep 5
+              done
+              echo "Model sync appears to have finished at:"
+              oc get job synchronize-model -ojsonpath='{.status.completionTime}'
+      serviceAccountName: wait-for-model
+

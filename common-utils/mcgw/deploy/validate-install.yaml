@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: validate-install
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: validate-install
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: validate-install
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+subjects:
+- kind: ServiceAccount
+  name: validate-install
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: validate-install
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: validate-install
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: phase-check
+          image: 'image-registry.openshift-image-registry.svc:5000/openshift/tools:latest'
+          env:
+            - name: POD_NAME_LABEL
+              value: app.kubernetes.io/name
+            - name: POD_NAME
+              value: replaceme
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+              echo "Checking Pod status.phase..."
+              POD_PHASE=$(oc get pod -l "$POD_NAME_LABEL"="$POD_NAME" -o jsonpath='{.items[0].status.phase}')
+              if [ "$POD_PHASE" = "Running" ]; then
+                echo "Pod is in Running phase."
+                exit 0
+              else
+                echo "Pod is in $POD_PHASE phase."
+              fi
+              sleep 5
+              done
+      serviceAccountName: validate-install

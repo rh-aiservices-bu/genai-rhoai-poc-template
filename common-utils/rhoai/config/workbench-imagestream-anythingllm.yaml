@@ -1,0 +1,34 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  annotations:
+    opendatahub.io/notebook-image-creator: admin
+    opendatahub.io/notebook-image-desc: >-
+      AnythingLLM on OpenShift AI.
+    opendatahub.io/notebook-image-name: "CUSTOM: AnythingLLM"
+    opendatahub.io/notebook-image-order: "02"
+    opendatahub.io/notebook-image-url: >-
+      https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/llm-clients/anythingllm
+    opendatahub.io/recommended-accelerators: "[]"
+    argocd.argoproj.io/sync-wave: "1"
+  name: anythingllm-workbench
+  namespace: redhat-ods-applications
+  labels:
+    opendatahub.io/dashboard: "true"
+    opendatahub.io/notebook-image: "true"
+    app.kubernetes.io/created-by: byon
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: "1.3"
+      annotations:
+        openshift.io/imported-from: https://quay.io/repository/rh-aiservices-bu/anythingllm-workbench
+      from:
+        kind: DockerImage
+        name: >-
+          quay.io/rh-aiservices-bu/anythingllm-workbench:1.3
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source

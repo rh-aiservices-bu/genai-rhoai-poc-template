@@ -4,6 +4,7 @@ metadata:
   name: bootstrap
   namespace: openshift-gitops
 spec:
+  goTemplate: true
   generators:
   - list:
       elements:
@@ -23,34 +24,56 @@ spec:
         targetRevision: main
         path: common-utils/rhoai/deploy
       - cluster: in-cluster
-        name: poc-primer
+        name: demo-project
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: main
-        path: basic-vanilla-poc/bootstrap/primer
+        path: common-utils/demo-project
       - cluster: in-cluster
-        name: anythingllm
+        name: mcgw-install
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: main
-        path: basic-vanilla-poc/bootstrap/anythingllm
+        path: common-utils/mcgw/install-operator
+      - cluster: in-cluster
+        name: mcgw-deploy
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: common-utils/mcgw/deploy
+      - cluster: in-cluster
+        name: mcgw-config
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: common-utils/mcgw/config
+      - cluster: in-cluster
+        name: model-sync
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: basic-vanilla-poc/bootstrap/model-sync
+      - cluster: in-cluster
+        name: model-deploy
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: basic-vanilla-poc/bootstrap/model-deploy
+        prune: "false"
+      - cluster: in-cluster
+        name: aligned-granite-anythingllm
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: main
+        path: basic-vanilla-poc/bootstrap/aligned-granite-anythingllm
   template:
     metadata:
-      name: "{{name}}"
+      name: "{{ .name }}"
       namespace: openshift-gitops
       labels:
         component: bootstrap
-        purpose: "{{name}}"
     spec:
       project: default
       source:
-        repoURL: "{{repoURL}}"
-        targetRevision: "{{targetRevision}}"
-        path: "{{path}}"
+        repoURL: "{{ .repoURL }}"
+        targetRevision: "{{ .targetRevision }}"
+        path: "{{ .path }}"
       destination:
-        server: "https://kubernetes.default.svc"
+        name: "{{ .cluster }}"
       syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
         syncOptions:
           - RespectIgnoreDifferences=true
           - Retry=true
@@ -59,4 +82,10 @@ spec:
           backoff:
             duration: 15s
             factor: 2
-            maxDuration: 5m # Maximum retry interval
+            maxDuration: 5m
+  templatePatch: |
+    spec:
+      syncPolicy:
+        automated:
+          prune: {{ .prune | default "true" }}
+          selfHeal: {{ .selfHeal | default "true" }}
