@@ -4,14 +4,14 @@ metadata:
   annotations:
     opendatahub.io/notebook-image-creator: admin
     opendatahub.io/notebook-image-desc: >-
-      VSCode image with all the libraries needed for running Instruct Lab on OpenShift AI.
-    opendatahub.io/notebook-image-name: "CUSTOM: InstructLab"
+      Jupyter image with all the libraries needed and a notebook for running InstructLab SDG on OpenShift AI.
+    opendatahub.io/notebook-image-name: "CUSTOM: InstructLab SDG"
     opendatahub.io/notebook-image-order: "03"
     opendatahub.io/notebook-image-url: >-
-      https://github.com/rh-aiservices-bu/parasol-insurance/tree/main/bootstrap/workbench-image
+      https://github.com/rh-aiservices-bu/sdg-notebook
     opendatahub.io/recommended-accelerators: "[]"
     argocd.argoproj.io/sync-wave: "1"
-  name: workbench-ilab
+  name: workbench-ilab-sdg
   namespace: redhat-ods-applications
   labels:
     opendatahub.io/dashboard: "true"
@@ -21,13 +21,13 @@ spec:
   lookupPolicy:
     local: true
   tags:
-    - name: "0.21.0"
+    - name: "latest"
       annotations:
-        openshift.io/imported-from: quay.io/rh-aiservices-bu/instructlab-workbench-code-server-cuda
+        openshift.io/imported-from: quay.io/rh-aiservices-bu/sdg-notebook:latest
       from:
         kind: DockerImage
         name: >-
-          quay.io/rh-aiservices-bu/instructlab-workbench-code-server-cuda:0.21.0
+          quay.io/rh-aiservices-bu/sdg-notebook:latest
       importPolicy:
         importMode: Legacy
       referencePolicy:
