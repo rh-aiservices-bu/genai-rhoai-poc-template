@@ -10,3 +10,15 @@ resources:
   - deploy-model.yaml
   # wave 1 configure
   - access-token.yaml
+
+# This ensures that we can use the kustomization to update the CRB if needed
+      # NOTE: The `hosts` field of the AuthConfig is not patched!
+patches:
+  - target:
+      group: authorino.kuadrant.io
+      version: v1beta3
+      kind: AuthConfig
+    patch: |-
+      - op: replace
+        path: /spec/authorization/kubernetes-rbac/kubernetesSubjectAccessReview/resourceAttributes/namespace/value
+        value: demo
