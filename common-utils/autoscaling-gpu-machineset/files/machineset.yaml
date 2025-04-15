@@ -1,0 +1,75 @@
+---
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: "${INFRA_ID}"
+  annotations:
+    machine.openshift.io/GPU: "4"
+  name: ${INFRA_ID}-g6e-12xlarge-gpu-worker-${AWS_AZ}
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: ${INFRA_ID}
+      machine.openshift.io/cluster-api-machineset: ${INFRA_ID}-gpu-worker-${AWS_AZ}
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: ${INFRA_ID}
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: ${INFRA_ID}-gpu-worker-${AWS_AZ}
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/gpu: ""
+          cluster-api/accelerator: 4x-nvidia-l40s
+      taints:
+        - key: nvidia.com/gpu
+          value: ""
+          effect: NoSchedule
+      providerSpec:
+        value:
+          apiVersion: machine.openshift.io/v1beta1
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          ami:
+            id: ${AWS_AMI}
+          blockDevices:
+            - ebs:
+                encrypted: true
+                iops: 0
+                kmsKey:
+                  arn: ""
+                volumeSize: 250
+                volumeType: gp3
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: ${INFRA_ID}-worker-profile
+          instanceType: g6e.12xlarge
+          placement:
+            availabilityZone: ${AWS_AZ}
+            region: ${AWS_REGION}
+          securityGroups:
+            - filters:
+                - name: tag:Name
+                  values:
+                    - ${INFRA_ID}-node
+            - filters:
+                - name: tag:Name
+                  values:
+                    - ${INFRA_ID}-lb
+          subnet:
+            filters:
+              - name: tag:Name
+                values:
+                  - ${INFRA_ID}-subnet-private-${AWS_AZ}
+          tags:
+            - name: kubernetes.io/cluster/${INFRA_ID}
+              value: owned
+          userDataSecret:
+            name: worker-user-data
