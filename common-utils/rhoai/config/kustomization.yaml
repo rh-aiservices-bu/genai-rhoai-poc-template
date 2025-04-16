@@ -12,3 +12,5 @@ resources:
   - workbench-imagestream-anythingllm.yaml
   - workbench-imagestream-ilab-sdg.yaml
   - workbench-imagestream-odh-tec.yaml
+    # rbac that lets us later bind cluster-scoped privileges for reading routes
+  - reusable-rbac.yaml
