@@ -64,6 +64,11 @@ spec:
         repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
         targetRevision: dev
         path: basic-vanilla-poc/bootstrap/aligned-granite-anythingllm
+      - cluster: in-cluster
+        name: sdg-workbench
+        repoURL: https://github.com/rh-aiservices-bu/genai-rhoai-poc-template.git
+        targetRevision: dev
+        path: basic-vanilla-poc/bootstrap/sdg-workbench
   template:
     metadata:
       name: "{{ .name }}"
