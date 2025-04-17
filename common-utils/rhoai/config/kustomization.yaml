@@ -10,5 +10,7 @@ resources:
   - AnythingLLM-connection-type-configmap.yaml   ## adds a new connection type for OpenAI-compatible model endpoints
     # adding the custom images:
   - workbench-imagestream-anythingllm.yaml
-  - workbench-imagestream-ilab.yaml
+  - workbench-imagestream-ilab-sdg.yaml
   - workbench-imagestream-odh-tec.yaml
+    # rbac that lets us later bind cluster-scoped privileges for reading routes
+  - reusable-rbac.yaml

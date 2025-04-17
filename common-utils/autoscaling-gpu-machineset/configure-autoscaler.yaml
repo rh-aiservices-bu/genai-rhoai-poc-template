@@ -1,0 +1,25 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-autoscaler
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      serviceAccountName: configure-autoscaler
+      containers:
+      - name: create-and-apply-resources
+        image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+        - /app/entrypoint.sh
+        volumeMounts:
+        - name: configure-autoscaler-files
+          mountPath: /app
+      volumes:
+      - name: configure-autoscaler-files
+        configMap:
+          name: configure-autoscaler-files
+      restartPolicy: Never

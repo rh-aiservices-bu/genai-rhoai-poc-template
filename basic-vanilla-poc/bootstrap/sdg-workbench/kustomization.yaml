@@ -1,0 +1,46 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: demo
+
+resources:
+  # wave 0
+  - mixtral.yaml
+  - config.yaml
+  - pvc.yaml
+  - rbac.yaml
+  - deploy-sdg.yaml
+
+configMapGenerator:
+  - name: sdg-workbench-files
+    files:
+      - files/sdg-workbench.yaml
+      - files/entrypoint.sh
+
+# This ensures that we can use the kustomization to update the CRB if needed
+      # NOTE: The `hosts` field of the AuthConfig is not patched!
+patches:
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRoleBinding
+    patch: |-
+      - op: replace
+        path: /subjects/0/namespace
+        value: demo
+  - target:
+      version: v1
+      kind: ConfigMap
+      name: sdg-workbench-config
+    patch: |-
+      - op: replace
+        path: /data/USER_PROJECT
+        value: demo
+  - target:
+      group: authorino.kuadrant.io
+      version: v1beta3
+      kind: AuthConfig
+    patch: |-
+      - op: replace
+        path: /spec/authorization/kubernetes-rbac/kubernetesSubjectAccessReview/resourceAttributes/namespace/value
+        value: demo

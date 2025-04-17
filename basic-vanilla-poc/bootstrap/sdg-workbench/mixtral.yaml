@@ -1,0 +1,175 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: access-mixtral-8x7b
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: access-mixtral-8x7b
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+rules:
+- apiGroups: ["serving.kserve.io"]
+  resources: ["inferenceservices"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: access-mixtral-8x7b
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+subjects:
+- kind: ServiceAccount
+  name: access-mixtral-8x7b
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: access-mixtral-8x7b
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: access-mixtral-8x7b-sa
+  labels:
+    opendatahub.io/dashboard: "true"
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    kubernetes.io/service-account.name: access-mixtral-8x7b
+    openshift.io/display-name: access-mixtral-8x7b
+type: kubernetes.io/service-account-token
+---
+apiVersion: authorino.kuadrant.io/v1beta3
+kind: AuthConfig
+metadata:
+  labels:
+    security.opendatahub.io/authorization-group: default
+  name: mixtral-8x7b
+spec:
+  authentication:
+    kubernetes-user:
+      kubernetesTokenReview:
+        audiences:
+          - https://kubernetes.default.svc
+      metrics: false
+      priority: 0
+  authorization:
+    kubernetes-rbac:
+      kubernetesSubjectAccessReview:
+        resourceAttributes:
+          group:
+            value: serving.kserve.io
+          name:
+            value: mixtral-8x7b
+          namespace:
+            value: demo
+          resource:
+            value: inferenceservices
+          subresource:
+            value: ""
+          verb:
+            value: get
+        user:
+          selector: auth.identity.user.username
+      metrics: false
+      priority: 0
+  hosts:
+    - mixtral-8x7b-predictor.demo
+    - mixtral-8x7b-predictor.demo.svc
+    - mixtral-8x7b-predictor.demo.svc.cluster.local
+    - mixtral-8x7b.demo
+    - mixtral-8x7b.demo.svc
+    - mixtral-8x7b.demo.svc.cluster.local
+---
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    opendatahub.io/accelerator-name: migrated-gpu
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: vLLM ServingRuntime for KServe
+    opendatahub.io/template-name: vllm-runtime
+    openshift.io/display-name: mixtral-8x7b
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: mixtral-8x7b
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  multiModel: false
+  supportedModelFormats:
+    - autoSelect: true
+      name: vLLM
+  containers:
+    - name: kserve-container
+      image: quay.io/modh/vllm:rhoai-2.16-cuda
+      command:
+        - python
+        - -m
+        - vllm.entrypoints.openai.api_server
+      args:
+        - --port=8080
+        - --model=/mnt/models
+        - --served-model-name={{.Name}}
+        - --dtype=float16
+        - --tensor-parallel-size=4
+      env:
+        - name: HF_HOME
+          value: /tmp/hf_home
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: shm
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+  volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 2Gi
+      name: shm
+---
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: Mixtral 8x7b
+    security.opendatahub.io/enable-auth: "true"
+    serving.knative.openshift.io/enablePassthrough: "true"
+    sidecar.istio.io/inject: "true"
+    sidecar.istio.io/rewriteAppHTTPProbers: "true"
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: mixtral-8x7b
+spec:
+  predictor:
+    annotations:
+      serving.knative.dev/progress-deadline: 30m
+    maxReplicas: 1
+    minReplicas: 0
+    annotations:
+      autoscaling.knative.dev/scale-to-zero-pod-retention-period: 5m
+    model:
+      modelFormat:
+        name: vLLM
+      name: ""
+      resources:
+        limits:
+          cpu: "32"
+          memory: 128Gi
+          nvidia.com/gpu: "4"
+        requests:
+          cpu: "16"
+          memory: 64Gi
+          nvidia.com/gpu: "4"
+      runtime: mixtral-8x7b
+      storageUri: oci://registry.redhat.io/rhelai1/modelcar-mixtral-8x7b-instruct-v0-1:latest
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Exists

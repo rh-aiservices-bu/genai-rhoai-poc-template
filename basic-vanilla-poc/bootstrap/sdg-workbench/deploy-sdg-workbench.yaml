@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deploy-sdg-workbench
+spec:
+  backoffLimit: 8
+  template:
+    spec:
+      serviceAccountName: deploy-sdg-workbench
+      containers:
+      - name: create-and-apply-resources
+        image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+        - /app/entrypoint.sh
+        envFrom:
+        - configMapRef:
+              name: sdg-workbench-config
+        volumeMounts:
+        - name: sdg-workbench-files
+          mountPath: /app
+      volumes:
+      - name: sdg-workbench-files
+        configMap:
+          name: sdg-workbench-files
+      restartPolicy: Never

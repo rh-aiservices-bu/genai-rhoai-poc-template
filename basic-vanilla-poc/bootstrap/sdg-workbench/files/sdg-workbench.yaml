@@ -1,0 +1,91 @@
+---
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  annotations:
+    notebooks.opendatahub.io/inject-oauth: 'true'
+    opendatahub.io/image-display-name: "CUSTOM: InstructLab SDG"
+    notebooks.opendatahub.io/oauth-logout-url: >-
+      $dashboard_route/projects/$USER_PROJECT?notebookLogout=sdg-workbench
+    opendatahub.io/accelerator-name: ''
+    openshift.io/description: 'A Custom Workbench to perform InstructLab Synthetic Data Generation manually'
+    openshift.io/display-name: 'Manual SDG Workbench'
+    notebooks.opendatahub.io/last-image-selection: '$WORKBENCH_IMAGE'
+    notebooks.opendatahub.io/last-size-selection: Standard
+    opendatahub.io/username: $USER_NAME
+  name: sdg-workbench
+  labels:
+    app: sdg-workbench
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/odh-managed: 'true'
+    opendatahub.io/user: $USER_NAME
+spec:
+  template:
+    spec:
+      affinity: {}
+      containers:
+        - resources:
+            limits:
+              cpu: '2'
+              memory: 8Gi
+            requests:
+              cpu: '2'
+              memory: 4Gi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/$USER_PROJECT/sdg-workbench/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: sdg-workbench
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/$USER_PROJECT/sdg-workbench/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          envFrom:
+            - secretRef:
+                name: mixtral-endpoint
+          env:
+            - name: NOTEBOOK_ARGS
+              value: |-
+                --ServerApp.port=8888
+                                  --ServerApp.token=''
+                                  --ServerApp.password=''
+                                  --ServerApp.base_url=/notebook/$USER_PROJECT/sdg-workbench
+                                  --ServerApp.quit_button=False
+                                  --ServerApp.tornado_settings={"user":"$USER_NAME","hub_host":"$dashboard_route","hub_prefix":"/projects/$USER_PROJECT"}
+            - name: JUPYTER_IMAGE
+              value: >-
+                image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/$WORKBENCH_IMAGE
+          ports:
+            - containerPort: 8888
+              name: notebook-port
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /opt/app-root/src
+              name: sdg-workbench
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/$WORKBENCH_IMAGE
+          workingDir: /opt/app-root/src
+      enableServiceLinks: false
+      serviceAccountName: sdg-workbench
+      tolerations:
+        - effect: NoSchedule
+          key: notebooksonly
+          operator: Exists
+      volumes:
+        - name: sdg-workbench
+          persistentVolumeClaim:
+            claimName: sdg-workbench
+  readyReplicas: 1
