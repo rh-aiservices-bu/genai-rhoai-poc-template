@@ -9,7 +9,7 @@ resources:
   - config.yaml
   - pvc.yaml
   - rbac.yaml
-  - deploy-sdg.yaml
+  - deploy-sdg-workbench.yaml
 
 configMapGenerator:
   - name: sdg-workbench-files
