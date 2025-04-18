@@ -25,9 +25,10 @@ echo
 
 echo -n 'Waiting for public model route'
 while true; do
-    model_route="https://$(oc get route -n istio-system mixtral-8x7b-${USER_PROJECT} -ojsonpath='{.status.ingress[0].host}' 2>/dev/null || :)/"
+    model_route="$(oc get route -n istio-system mixtral-8x7b-${USER_PROJECT} -ojsonpath='{.status.ingress[0].host}' 2>/dev/null || :)"
     echo -n .
     if [ -n "$model_route" ]; then
+        model_route="https://${model_route}/v1"
         break
     fi
     sleep 5
