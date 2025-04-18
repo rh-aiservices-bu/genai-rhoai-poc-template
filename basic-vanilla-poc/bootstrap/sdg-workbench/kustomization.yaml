@@ -15,6 +15,7 @@ configMapGenerator:
   - name: sdg-workbench-files
     files:
       - files/sdg-workbench.yaml
+      - files/mixtral-endpoint.yaml
       - files/entrypoint.sh
 
 # This ensures that we can use the kustomization to update the CRB if needed
