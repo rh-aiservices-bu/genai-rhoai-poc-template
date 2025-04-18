@@ -26,5 +26,5 @@ roleRef:
   name: route-reader
 subjects:
 - kind: ServiceAccount
-  name: deploy-anythingllm
+  name: deploy-sdg-workbench
   namespace: demo
