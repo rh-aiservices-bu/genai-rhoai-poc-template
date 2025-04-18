@@ -150,10 +150,9 @@ spec:
   predictor:
     annotations:
       serving.knative.dev/progress-deadline: 30m
+      autoscaling.knative.dev/scale-to-zero-pod-retention-period: 5m
     maxReplicas: 1
     minReplicas: 0
-    annotations:
-      autoscaling.knative.dev/scale-to-zero-pod-retention-period: 5m
     model:
       modelFormat:
         name: vLLM
